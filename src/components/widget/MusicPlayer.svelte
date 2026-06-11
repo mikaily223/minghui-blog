@@ -1,4 +1,5 @@
 <script lang="ts">
+const baseUrl = import.meta.env.BASE_URL;
 // 导入 Svelte 的生命周期函数和过渡效果
 
 // 导入 Icon 组件，用于显示图标
@@ -54,7 +55,7 @@ let showError = false;
 let currentSong = {
 	title: "示例歌曲",
 	artist: "示例艺术家",
-	cover: "/favicon/favicon-light-192.png",
+	cover: `${baseUrl}favicon/favicon-light-192.png`,
 	url: "",
 	duration: 0,
 };
