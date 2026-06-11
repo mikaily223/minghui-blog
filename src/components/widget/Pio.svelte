@@ -9,7 +9,7 @@ const pioOptions = {
 	mode: pioConfig.mode,
 	hidden: pioConfig.hiddenOnMobile,
 	content: pioConfig.dialog || {},
-	model: pioConfig.models || [`${baseUrl}pio/models/pio/model.json`],
+	model: (pioConfig.models || [`pio/models/pio/model.json`]).map(m => m.startsWith("/") || m.startsWith("http") ? m : `${baseUrl}${m}`),
 };
 
 // 全局Pio实例引用
