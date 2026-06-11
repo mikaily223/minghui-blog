@@ -312,10 +312,7 @@ export const announcementConfig: AnnouncementConfig = {
 
 export const musicPlayerConfig: MusicPlayerConfig = {
 	enable: true, // 启用音乐播放器功能
-	mode: "meting", // "meting" 使用在线API，"local" 使用本地播放列表
-	server: "netease", // netease | tencent | kugou | xiami | baidu
-	type: "playlist", // playlist | song | album
-	id: "3092434884", // 网易云歌单ID
+	mode: "local", // "local" 使用本地播放列表，"meting" 使用在线API
 };
 
 export const footerConfig: FooterConfig = {
