@@ -5,8 +5,23 @@
   <link href="https://mikaily223.github.io/" rel="alternate" type="text/html"/>
   <link href="https://mikaily223.github.io/atom.xml" rel="self" type="application/atom+xml"/>
   <id>https://mikaily223.github.io/</id>
-  <updated>2026-06-11T06:30:13.604Z</updated>
+  <updated>2026-06-11T06:30:30.243Z</updated>
   <language>zh_CN</language>
+  <entry>
+    <title>Hello world!</title>
+    <link href="https://mikaily223.github.io/posts/2026/06/11/hello-world/" rel="alternate" type="text/html"/>
+    <id>https://mikaily223.github.io/posts/2026/06/11/hello-world/</id>
+    <published>2026-06-11T00:00:00.000Z</published>
+    <updated>2026-06-11T00:00:00.000Z</updated>
+    <summary>你好，世界！</summary>
+    <content type="html"><![CDATA[<h1>Hello World</h1>
+<p>xixixi</p>
+]]></content>
+    <author>
+      <name>Ming hui</name>
+    </author>
+    <category term="测试分类"></category>
+  </entry>
   <entry>
     <title>金铲铲三板甲剑魔思路总结</title>
     <link href="https://mikaily223.github.io/posts/2026/06/11/%E9%87%91%E9%93%B2%E9%93%B2%E4%B8%89%E6%9D%BF%E7%94%B2%E5%89%91%E9%AD%94/" rel="alternate" type="text/html"/>
@@ -32,28 +47,15 @@
 <li>千珏2星之后，上9找慎和维古斯</li>
 </ol>
 <h3>小提示</h3>
-<p>如果无法凑到三板甲和同行较多拿不到三星剑魔，考虑转阵容 新星海魔（不依赖剑魔),todo 目前还在想
-如果血量不健康且实在没办法升8拿千珏，在7直接大搜想办法能苟一点分就一点分（如果拿不到就只能老八了，所以我一般有就捏着）</p>
+<ol>
+<li>如果无法凑到三板甲和同行较多拿不到三星剑魔，考虑转阵容 新星海魔（不依赖剑魔),todo 目前还在想</li>
+<li>如果血量不健康且实在没办法升8拿千珏，在7直接大搜想办法能苟一点分就一点分（如果拿不到就只能老八了，所以我一般有就捏着）</li>
+</ol>
 ]]></content>
     <author>
       <name>Ming hui</name>
     </author>
     <category term="金铲铲"></category>
-  </entry>
-  <entry>
-    <title>Hello world!</title>
-    <link href="https://mikaily223.github.io/posts/2026/06/11/hello-world/" rel="alternate" type="text/html"/>
-    <id>https://mikaily223.github.io/posts/2026/06/11/hello-world/</id>
-    <published>2026-06-11T00:00:00.000Z</published>
-    <updated>2026-06-11T00:00:00.000Z</updated>
-    <summary>你好，世界！</summary>
-    <content type="html"><![CDATA[<h1>Hello World</h1>
-<p>xixixi</p>
-]]></content>
-    <author>
-      <name>Ming hui</name>
-    </author>
-    <category term="测试分类"></category>
   </entry>
   <entry>
     <title>随笔</title>
