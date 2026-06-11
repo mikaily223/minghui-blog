@@ -1,0 +1,1 @@
+import"./config.DVWz4Qkz.js";import"./zh_TW.0MqjO24q.js";function s(o,n){const t=o.replace(/^\/|\/$/g,"").toLowerCase(),r=n.replace(/^\/|\/$/g,"").toLowerCase();return t===r}function e(...o){return o.join("/").replace(/\/+/g,"/")}function l(o){return a(`/posts/${o}/`)}function a(o){return e("","/minghui-blog/",o)}export{l as g,s as p,a as u};
