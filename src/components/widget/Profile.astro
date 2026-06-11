@@ -40,17 +40,17 @@ const umamiBaseUrl = umamiConfig.baseUrl || "";
                 profileConfig.bio
             )}
         </div>
-        <div class="flex gap-2 justify-center mb-1" id="profile-links">
+        <div class="flex gap-2 justify-center mb-1">
             {profileConfig.links.length > 1 && profileConfig.links.map(item =>
-                    <button aria-label={item.name} data-link-name={item.name} class="profile-link-btn btn-regular rounded-lg h-10 w-10 active:scale-90">
+                    <a rel="me" aria-label={item.name} href={item.url} target="_blank" class="btn-regular rounded-lg h-10 w-10 active:scale-90">
                         <Icon name={item.icon} class="text-[1.5rem]"></Icon>
-                    </button>
+                    </a>
             )}
-            {profileConfig.links.length == 1 && <button aria-label={profileConfig.links[0].name} data-link-name={profileConfig.links[0].name}
-                                            class="profile-link-btn btn-regular rounded-lg h-10 gap-2 px-3 font-bold active:scale-95">
+            {profileConfig.links.length == 1 && <a rel="me" aria-label={profileConfig.links[0].name} href={profileConfig.links[0].url} target="_blank"
+                                            class="btn-regular rounded-lg h-10 gap-2 px-3 font-bold active:scale-95">
                 <Icon name={profileConfig.links[0].icon} class="text-[1.5rem]"></Icon>
                 {profileConfig.links[0].name}
-            </button>}
+            </a>}
         </div>
         {umamiEnabled && (
             <div class="text-sm text-gray-500 mt-2 text-center">
@@ -104,35 +104,3 @@ const umamiBaseUrl = umamiConfig.baseUrl || "";
     </script>
 )}
 
-<script>
-    // 简单 toast 提示
-    function showToast(msg) {
-        const toast = document.createElement('div');
-        toast.textContent = msg;
-        toast.className = 'fixed bottom-20 left-1/2 -translate-x-1/2 bg-black/80 text-white px-5 py-2.5 rounded-xl text-sm z-[999] animate-toast';
-        document.body.appendChild(toast);
-        setTimeout(() => {
-            toast.classList.add('opacity-0');
-            setTimeout(() => toast.remove(), 300);
-        }, 2000);
-    }
-
-    // 个人链接点击提示
-    document.querySelectorAll('.profile-link-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-            const name = btn.dataset.linkName || '该链接';
-            showToast(`"${name}" 还没接入，等待作者~`);
-        });
-    });
-</script>
-
-<style>
-    @keyframes toast-in {
-        from { opacity: 0; transform: translate(-50%, 1rem); }
-        to   { opacity: 1; transform: translate(-50%, 0); }
-    }
-    .animate-toast {
-        animation: toast-in 0.3s ease forwards;
-        transition: opacity 0.3s ease;
-    }
-</style>
