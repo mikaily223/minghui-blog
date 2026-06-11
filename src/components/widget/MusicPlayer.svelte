@@ -223,6 +223,7 @@ function loadSong(song: typeof currentSong) {
 	}
 }
 
+	let autoPlayPending = false;
 function handleLoadSuccess() {
 	isLoading = false;
 	if (audio?.duration && audio.duration > 1) {
@@ -230,6 +231,18 @@ function handleLoadSuccess() {
 		if (playlist[currentIndex]) playlist[currentIndex].duration = duration;
 		currentSong.duration = duration;
 	}
+		if (autoPlayPending) {
+			autoPlayPending = false;
+			audio.play().catch(() => {
+				const playOnInteraction = () => {
+					audio.play().catch(() => {});
+					document.removeEventListener("click", playOnInteraction);
+					document.removeEventListener("touchstart", playOnInteraction);
+				};
+				document.addEventListener("click", playOnInteraction, { once: true });
+				document.addEventListener("touchstart", playOnInteraction, { once: true });
+			});
+		}
 }
 
 function handleLoadError(event: Event) {
@@ -331,6 +344,7 @@ onMount(() => {
 		// 使用本地播放列表，不发送任何API请求
 		playlist = [...localPlaylist];
 		if (playlist.length > 0) {
+				autoPlayPending = true;
 			loadSong(playlist[0]);
 		} else {
 			showErrorMessage("本地播放列表为空");
