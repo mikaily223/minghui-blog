@@ -20,7 +20,7 @@ import { LinkPreset } from "./types/config";
 const SITE_LANG = "zh_CN"; // 语言代码，例如：'en', 'zh_CN', 'ja' 等。
 
 export const siteConfig: SiteConfig = {
-	title: "minghui 的博客",
+	title: "minghui`s blog",
 	subtitle: "今朝依旧，今后亦然",
 
 	lang: SITE_LANG,
