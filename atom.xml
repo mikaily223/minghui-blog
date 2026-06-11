@@ -5,7 +5,7 @@
   <link href="https://mikaily223.github.io/" rel="alternate" type="text/html"/>
   <link href="https://mikaily223.github.io/atom.xml" rel="self" type="application/atom+xml"/>
   <id>https://mikaily223.github.io/</id>
-  <updated>2026-06-11T08:23:56.375Z</updated>
+  <updated>2026-06-11T12:14:16.435Z</updated>
   <language>zh_CN</language>
   <entry>
     <title>Hello world!</title>
@@ -21,6 +21,20 @@
       <name>Ming hui</name>
     </author>
     <category term="测试分类"></category>
+  </entry>
+  <entry>
+    <title>上班摸鱼大法</title>
+    <link href="https://mikaily223.github.io/posts/2026/06/11/%E4%B8%8A%E7%8F%AD%E6%91%B8%E9%B1%BC%E5%A4%A7%E6%B3%95/" rel="alternate" type="text/html"/>
+    <id>https://mikaily223.github.io/posts/2026/06/11/%E4%B8%8A%E7%8F%AD%E6%91%B8%E9%B1%BC%E5%A4%A7%E6%B3%95/</id>
+    <published>2026-06-11T00:00:00.000Z</published>
+    <updated>2026-06-11T00:00:00.000Z</updated>
+    <summary>随便写写，随便做做</summary>
+    <content type="html"><![CDATA[<h1>「」</h1>
+]]></content>
+    <author>
+      <name>Ming hui</name>
+    </author>
+    <category term="方法论"></category>
   </entry>
   <entry>
     <title>金铲铲三板甲剑魔思路总结</title>
@@ -70,19 +84,5 @@
       <name>Ming hui</name>
     </author>
     <category term="金铲铲"></category>
-  </entry>
-  <entry>
-    <title>上班摸鱼打法总结</title>
-    <link href="https://mikaily223.github.io/posts/2026/06/11/%E4%B8%8A%E7%8F%AD%E6%91%B8%E9%B1%BC%E5%A4%A7%E6%B3%95/" rel="alternate" type="text/html"/>
-    <id>https://mikaily223.github.io/posts/2026/06/11/%E4%B8%8A%E7%8F%AD%E6%91%B8%E9%B1%BC%E5%A4%A7%E6%B3%95/</id>
-    <published>2026-06-11T00:00:00.000Z</published>
-    <updated>2026-06-11T00:00:00.000Z</updated>
-    <summary>随便写写，随便做做</summary>
-    <content type="html"><![CDATA[<h1>摸鱼焚决</h1>
-]]></content>
-    <author>
-      <name>Ming hui</name>
-    </author>
-    <category term="方法论"></category>
   </entry>
 </feed>
