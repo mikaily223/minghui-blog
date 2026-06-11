@@ -2,7 +2,7 @@
 title: Hello world!
 published: 2026-06-11
 updated: 2026-06-11
-draft: true
+draft: false
 description: 你好，世界！
 image: /assets/images/cover.jpg
 tags: [测试]
