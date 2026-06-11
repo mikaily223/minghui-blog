@@ -5,8 +5,41 @@
   <link href="https://mikaily223.github.io/" rel="alternate" type="text/html"/>
   <link href="https://mikaily223.github.io/atom.xml" rel="self" type="application/atom+xml"/>
   <id>https://mikaily223.github.io/</id>
-  <updated>2026-06-11T06:12:33.594Z</updated>
+  <updated>2026-06-11T06:30:13.604Z</updated>
   <language>zh_CN</language>
+  <entry>
+    <title>金铲铲三板甲剑魔思路总结</title>
+    <link href="https://mikaily223.github.io/posts/2026/06/11/%E9%87%91%E9%93%B2%E9%93%B2%E4%B8%89%E6%9D%BF%E7%94%B2%E5%89%91%E9%AD%94/" rel="alternate" type="text/html"/>
+    <id>https://mikaily223.github.io/posts/2026/06/11/%E9%87%91%E9%93%B2%E9%93%B2%E4%B8%89%E6%9D%BF%E7%94%B2%E5%89%91%E9%AD%94/</id>
+    <published>2026-06-11T00:00:00.000Z</published>
+    <updated>2026-06-11T00:00:00.000Z</updated>
+    <summary>苟分思路，前四还是老八我说了算！</summary>
+    <content type="html"><![CDATA[<h1>金铲铲三板甲剑魔思路总结</h1>
+<h2>核心构成</h2>
+<p><strong>剑魔</strong>
+特工专属技能与护甲相关，并且能够对全屏进行伤害和击飞，装备核心是三板甲，次选 双板甲+血手。<br />
+故需要五新星特工队 剑魔,女警，阿卡丽，大树，千珏</p>
+<p>最终完全体阵容：
+剑魔,阿卡丽,卑尔维斯,女警,大树,千珏,塔姆,慎,维古斯</p>
+<h2>阵容运营思路</h2>
+<p>选星神全部以三战力为主，中后期以打连胜，拿经济提升并不大。选角色+装备 尽量先凑出三板甲，第二次选英雄如果有千珏并且血量低于50可以考虑无视装备</p>
+<ol>
+<li>前期以经济为主，走连败为了打石甲虫爆两个基础锻造器，优先拿三板甲的组件，其次反曲弓&gt;大剑&gt;巨人腰带。</li>
+<li>打完石甲虫之后，尽量构成3海魔+剑魔+大树 慢D拿3星阿卡丽，卑尔维斯，剑魔</li>
+<li>打狐狸的时候，将阿卡丽和女警替换贝蕾亚和雷克塞,提高战斗力尽可能追连胜</li>
+<li>在123步骤中，只要剑魔3星就生6级 4新星+卑尔维斯+武器/塔姆/堡垒卫士/千珏 继续慢D 阿卡丽和维尔维斯</li>
+<li>阿卡丽和卑尔维斯三星之后，人口拉八搜千珏</li>
+<li>千珏2星之后，上9找慎和维古斯</li>
+</ol>
+<h3>小提示</h3>
+<p>如果无法凑到三板甲和同行较多拿不到三星剑魔，考虑转阵容 新星海魔（不依赖剑魔),todo 目前还在想
+如果血量不健康且实在没办法升8拿千珏，在7直接大搜想办法能苟一点分就一点分（如果拿不到就只能老八了，所以我一般有就捏着）</p>
+]]></content>
+    <author>
+      <name>Ming hui</name>
+    </author>
+    <category term="金铲铲"></category>
+  </entry>
   <entry>
     <title>Hello world!</title>
     <link href="https://mikaily223.github.io/posts/2026/06/11/hello-world/" rel="alternate" type="text/html"/>
@@ -24,28 +57,13 @@
   </entry>
   <entry>
     <title>随笔</title>
-    <link href="https://mikaily223.github.io/posts/2026/06/11/%E9%87%91%E9%93%B2%E9%93%B2%E4%B8%89%E6%9D%BF%E7%94%B2%E5%89%91%E9%AD%94/" rel="alternate" type="text/html"/>
-    <id>https://mikaily223.github.io/posts/2026/06/11/%E9%87%91%E9%93%B2%E9%93%B2%E4%B8%89%E6%9D%BF%E7%94%B2%E5%89%91%E9%AD%94/</id>
+    <link href="https://mikaily223.github.io/posts/2026/06/11/%E9%9A%8F%E7%AC%94/" rel="alternate" type="text/html"/>
+    <id>https://mikaily223.github.io/posts/2026/06/11/%E9%9A%8F%E7%AC%94/</id>
     <published>2026-06-11T00:00:00.000Z</published>
     <updated>2026-06-11T00:00:00.000Z</updated>
     <summary>随便写写，随便做做</summary>
     <content type="html"><![CDATA[<h1>上班摸鱼大法</h1>
 <h2></h2>
-]]></content>
-    <author>
-      <name>Ming hui</name>
-    </author>
-    <category term="测试分类"></category>
-  </entry>
-  <entry>
-    <title>Hello world!</title>
-    <link href="https://mikaily223.github.io/posts/2026/06/11/%E9%9A%8F%E7%AC%94/" rel="alternate" type="text/html"/>
-    <id>https://mikaily223.github.io/posts/2026/06/11/%E9%9A%8F%E7%AC%94/</id>
-    <published>2026-06-11T00:00:00.000Z</published>
-    <updated>2026-06-11T00:00:00.000Z</updated>
-    <summary>你好，世界！</summary>
-    <content type="html"><![CDATA[<h1>Hello World</h1>
-<p>xixixi</p>
 ]]></content>
     <author>
       <name>Ming hui</name>
