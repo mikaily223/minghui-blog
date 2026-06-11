@@ -17,7 +17,10 @@
       "Bash(mkdir -p src/content/posts/2026/06/11)",
       "Bash(mv src/content/posts/hello-world.md src/content/posts/write.md src/content/posts/2026/06/11/)",
       "Bash(mkdir -p src/content/templates)",
-      "Bash(mv src/content/posts/_template.md src/content/templates/)"
+      "Bash(mv src/content/posts/_template.md src/content/templates/)",
+      "Bash(sed -i '240s/},/},/' src/config.ts)",
+      "Bash(sed -i '241s/\\\\t\\\\t{$/\\\\t],/' src/config.ts)",
+      "Bash(sed -i '242s/\\\\t};/\\\\t};/' src/config.ts)"
     ]
   }
 }
