@@ -20,7 +20,10 @@
       "Bash(mv src/content/posts/_template.md src/content/templates/)",
       "Bash(sed -i '240s/},/},/' src/config.ts)",
       "Bash(sed -i '241s/\\\\t\\\\t{$/\\\\t],/' src/config.ts)",
-      "Bash(sed -i '242s/\\\\t};/\\\\t};/' src/config.ts)"
+      "Bash(sed -i '242s/\\\\t};/\\\\t};/' src/config.ts)",
+      "Bash(python3 -c \"from PIL import Image; print\\('pillow available'\\)\")",
+      "Bash(python -c \"from PIL import Image; print\\('pillow available'\\)\")",
+      "Bash(npx --yes sharp-cli --help)"
     ]
   }
 }
