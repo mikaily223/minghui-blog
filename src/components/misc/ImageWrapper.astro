@@ -13,7 +13,7 @@ interface Props {
 import { Image } from "astro:assets";
 import { url } from "../../utils/url-utils";
 
-const { id, src, alt, position = "center", basePath = "/" } = Astro.props;
+const { id, src, alt, position = "center", basePath = "" } = Astro.props;
 const className = Astro.props.class;
 
 const isLocal = !(
@@ -41,7 +41,7 @@ if (isLocal) {
 			`\n[ERROR] Image file not found: ${normalizedPath.replace("../../", "src/")}`,
 		);
 	}
-	img = await file();
+	img = file ? await file() : undefined;
 }
 
 const imageClass = "w-full h-full object-cover";
