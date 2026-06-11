@@ -5,6 +5,21 @@
   <link href="https://mikaily223.github.io/" rel="alternate" type="text/html"/>
   <link href="https://mikaily223.github.io/atom.xml" rel="self" type="application/atom+xml"/>
   <id>https://mikaily223.github.io/</id>
-  <updated>2026-06-11T05:46:48.586Z</updated>
+  <updated>2026-06-11T05:55:51.734Z</updated>
   <language>zh_CN</language>
+  <entry>
+    <title>Hello world!</title>
+    <link href="https://mikaily223.github.io/posts/2026/06/11/hello-world/" rel="alternate" type="text/html"/>
+    <id>https://mikaily223.github.io/posts/2026/06/11/hello-world/</id>
+    <published>2026-06-11T00:00:00.000Z</published>
+    <updated>2026-06-11T00:00:00.000Z</updated>
+    <summary>你好，世界！</summary>
+    <content type="html"><![CDATA[<h1>Hello World</h1>
+<p>xixixi</p>
+]]></content>
+    <author>
+      <name>Ming hui</name>
+    </author>
+    <category term="测试分类"></category>
+  </entry>
 </feed>
