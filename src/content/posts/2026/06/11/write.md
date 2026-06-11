@@ -11,14 +11,4 @@ lang: zh
 pinned: false
 ---
 
-在这里写正文，支持所有 Markdown 语法以及扩展功能：
-
-- **Mermaid 图表**
-- **代码高亮**
-- **数学公式** $E = mc^2$
-- 图片画廊
-- 提示框（note / tip / warning / danger）
-
-## 二级标题
-
-正文内容...
+好久没有写作了，偶尔也写作一下吧。

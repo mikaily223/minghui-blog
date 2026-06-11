@@ -4,7 +4,20 @@
       "Bash(pnpm dev *)",
       "Bash(npx tsc *)",
       "Bash(git config *)",
-      "Bash(git remote *)"
+      "Bash(git remote *)",
+      "Bash(pnpm run *)",
+      "Bash(git ls-remote *)",
+      "Bash(git fetch *)",
+      "Bash(git ls-tree *)",
+      "Bash(gh api *)",
+      "Bash(curl *)",
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)",
+      "Bash(git push *)",
+      "Bash(mkdir -p src/content/posts/2026/06/11)",
+      "Bash(mv src/content/posts/hello-world.md src/content/posts/write.md src/content/posts/2026/06/11/)",
+      "Bash(mkdir -p src/content/templates)",
+      "Bash(mv src/content/posts/_template.md src/content/templates/)"
     ]
   }
 }
