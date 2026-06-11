@@ -197,8 +197,8 @@ function playSong(index: number) {
 
 function getAssetPath(path: string): string {
 	if (path.startsWith("http://") || path.startsWith("https://")) return path;
-	if (path.startsWith("/")) return path;
-	return `/${path}`;
+	if (path.startsWith("/")) return baseUrl + path.slice(1);
+	return baseUrl + path;
 }
 
 function loadSong(song: typeof currentSong) {
