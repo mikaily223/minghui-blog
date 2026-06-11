@@ -23,7 +23,13 @@
       "Bash(sed -i '242s/\\\\t};/\\\\t};/' src/config.ts)",
       "Bash(python3 -c \"from PIL import Image; print\\('pillow available'\\)\")",
       "Bash(python -c \"from PIL import Image; print\\('pillow available'\\)\")",
-      "Bash(npx --yes sharp-cli --help)"
+      "Bash(npx --yes sharp-cli --help)",
+      "Bash(python3)",
+      "Bash(python3 *)",
+      "Bash(node *)",
+      "Bash(sed -i '200s|if \\(path.startsWith\\(\"/\"\\)\\) return path;|if \\(path.startsWith\\(\"/\"\\)\\) return baseUrl + path.slice\\(1\\);|' src/components/widget/MusicPlayer.svelte)",
+      "Bash(sed -i '201s|return `/${path}`;|return baseUrl + path;|' src/components/widget/MusicPlayer.svelte)",
+      "Bash(grep *)"
     ]
   }
 }
