@@ -83,7 +83,7 @@ const generatePostList = () => {
 
 const checkIsHomePage = () => {
 	isHomePage =
-		window.location.pathname === "/" || window.location.pathname === "";
+		window.location.pathname === "/" || window.location.pathname === "" || window.location.pathname === import.meta.env.BASE_URL;
 };
 
 const scrollToHeading = (id: string) => {
