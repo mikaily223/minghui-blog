@@ -1,4 +1,324 @@
-<?xml version="1.0" encoding="UTF-8"?><rss version="2.0" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>minghui`s blog</title><description>今朝依旧，今后亦然</description><link>https://mikaily223.github.io/</link><language>zh_CN</language><item><title>Hello world!</title><link>https://mikaily223.github.io/posts/2026/06/11/hello-world/</link><guid isPermaLink="true">https://mikaily223.github.io/posts/2026/06/11/hello-world/</guid><description>你好，世界！</description><pubDate>Thu, 11 Jun 2026 00:00:00 GMT</pubDate><content:encoded>&lt;h1&gt;Hello World&lt;/h1&gt;
+<?xml version="1.0" encoding="UTF-8"?><rss version="2.0" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>minghui`s blog</title><description>今朝依旧，今后亦然</description><link>https://mikaily223.github.io/</link><language>zh_CN</language><item><title>Transformer 入门教材 · 第 4 章　编码器-解码器、掩码与文本生成</title><link>https://mikaily223.github.io/posts/2026/06/16/transformer%E6%95%99%E6%9D%90_%E7%AC%AC4%E7%AB%A0_%E7%BC%96%E7%A0%81%E5%99%A8%E8%A7%A3%E7%A0%81%E5%99%A8%E4%B8%8E%E6%96%87%E6%9C%AC%E7%94%9F%E6%88%90/</link><guid isPermaLink="true">https://mikaily223.github.io/posts/2026/06/16/transformer%E6%95%99%E6%9D%90_%E7%AC%AC4%E7%AB%A0_%E7%BC%96%E7%A0%81%E5%99%A8%E8%A7%A3%E7%A0%81%E5%99%A8%E4%B8%8E%E6%96%87%E6%9C%AC%E7%94%9F%E6%88%90/</guid><description>编码器与解码器的根本区别、解码器的三个子层（含交叉注意力）、因果掩码，以及训练（teacher forcing）与推理（自回归）两种工作方式。</description><pubDate>Tue, 16 Jun 2026 00:00:00 GMT</pubDate><content:encoded>&lt;h1&gt;第 4 章　编码器-解码器、掩码与文本生成&lt;/h1&gt;
+&lt;p&gt;&lt;strong&gt;学习目标&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;说清编码器与解码器的根本区别。&lt;/li&gt;
+&lt;li&gt;理解解码器的三个子层,尤其是交叉注意力。&lt;/li&gt;
+&lt;li&gt;理解因果掩码,以及训练与推理两种工作方式的区别。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;第 3 章你搭好的其实是 Transformer 的&quot;编码器&quot;。本章补全另一半,并搞清它到底如何生成文字。&lt;/p&gt;
+&lt;h2&gt;4.1　编码器与解码器的根本区别&lt;/h2&gt;
+&lt;p&gt;先抛开术语。&lt;strong&gt;编码(encode)= 把文字变成&quot;含义&quot;&lt;/strong&gt;:读入一段文字,把它压缩成富含语义的内部表示(一堆向量),即&quot;读懂&quot;。&lt;strong&gt;解码(decode)= 把&quot;含义&quot;变回文字&lt;/strong&gt;:拿着内部理解,一个词一个词地写出来,即&quot;表达&quot;。&lt;/p&gt;
+&lt;p&gt;想象一个人类翻译员翻译 &quot;I love cats&quot;:他先&lt;strong&gt;通读整句英文、在脑中形成完整理解&lt;/strong&gt;(编码:文字→含义),再&lt;strong&gt;根据理解把中文一个字一个字写出来&lt;/strong&gt;(解码:含义→文字)。&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;&lt;/th&gt;
+&lt;th&gt;编码器 Encoder&lt;/th&gt;
+&lt;th&gt;解码器 Decoder&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;任务&lt;/td&gt;
+&lt;td&gt;读懂输入&lt;/td&gt;
+&lt;td&gt;生成输出&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;产出&lt;/td&gt;
+&lt;td&gt;向量(理解)&lt;/td&gt;
+&lt;td&gt;文字(一个个词)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;看的范围&lt;/td&gt;
+&lt;td&gt;整句双向(无掩码)&lt;/td&gt;
+&lt;td&gt;只看已生成的(因果掩码)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;工作方式&lt;/td&gt;
+&lt;td&gt;一次性处理整句&lt;/td&gt;
+&lt;td&gt;一个词一个词循环生成&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;它俩分成两个模块,是因为&quot;读懂源句&quot;和&quot;写出目标句&quot;是两种不同的活儿:读懂时希望纵览全句,生成时却只能依赖已写出的部分。&lt;/p&gt;
+&lt;h2&gt;4.2　解码器的三个子层&lt;/h2&gt;
+&lt;p&gt;解码器模块长得像编码器模块,但有&lt;strong&gt;三个&lt;/strong&gt;子层:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;带掩码的自注意力&lt;/strong&gt;:解码器对&quot;已经生成的目标词&quot;做自注意力,但加了一道掩码,只能看到自己和前面的词,看不到未来(详见 4.3)。Q、K、V 都来自目标侧。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;交叉注意力&lt;/strong&gt;:这是 Q/K/V 设计的精彩回报——&lt;strong&gt;Query 来自解码器&lt;/strong&gt;(我现在想生成什么?),而 &lt;strong&gt;Key 和 Value 来自编码器的输出&lt;/strong&gt;(源句)。于是解码器用自己的 Query 去&quot;查询&quot;源句,把相关信息拉过来。这正是源语言与目标语言挂上钩的地方。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;前馈网络&lt;/strong&gt;:和之前一样。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;三个子层同样各自包&quot;残差 + 层归一化&quot;。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;交叉注意力的作用&lt;/strong&gt;:提问的是解码器(所以 Q 来自它),被查的是源句(所以 K/V 来自编码器)。这个不对称就是重点。没有这一层,解码器根本不知道自己在翻译什么。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2&gt;4.3　因果掩码:为什么 + 怎么做&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;为什么&lt;/strong&gt;:生成时是一个词一个词往外蹦的,当模型要生成第 5 个词时,第 6、7 个词还不存在。如果训练时允许第 5 个位置偷看到第 6 个位置(也就是正确答案),模型就会&quot;作弊&quot;,什么也学不到。所以必须禁止每个位置看到它后面的位置。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;怎么做&lt;/strong&gt;:在 softmax 之前,把指向&quot;未来位置&quot;的注意力分数全部设成负无穷(−∞)。因为 e^(−∞) = 0,这些未来位置经 softmax 后权重变成&lt;strong&gt;恰好为 0&lt;/strong&gt;,等于完全屏蔽——不是&quot;几乎看不见&quot;,而是一点都不漏。这道遮罩叫&quot;因果掩码&quot;,它只加在解码器的带掩码自注意力这一层。&lt;/p&gt;
+&lt;h2&gt;4.4　训练与推理:两种工作方式&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;训练时(teacher forcing)&lt;/strong&gt;:正确的目标句我们手上已经有了(它就是训练数据)。于是把整句目标句&lt;strong&gt;一次性&lt;/strong&gt;全喂进解码器,靠因果掩码保证每个位置只能用它前面的词去预测下一个词。因为全句&lt;strong&gt;并行&lt;/strong&gt;处理,训练很快。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;推理时(自回归)&lt;/strong&gt;:此时没有答案,只能一个词一个词地生成。流程是:给一个特殊的&quot;开始符&quot;→ 解码器吐出第 1 个词 → 把它接回去 → 吐出第 2 个词 → ……直到吐出&quot;结束符&quot;。这个过程天生是&lt;strong&gt;串行&lt;/strong&gt;的,所以生成比训练慢。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;关键&lt;/strong&gt;:因果掩码让&quot;训练时能并行&quot;和&quot;生成时只能看过去&quot;这两件看似矛盾的事同时成立。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2&gt;4.5　输出层:如何选出一个词&lt;/h2&gt;
+&lt;p&gt;解码器最后一层输出的每个向量,会过一个线性层,映射成一个&lt;strong&gt;和词表一样长&lt;/strong&gt;的向量,再过 softmax,得到&quot;下一个词是词表里每个词的概率&quot;。取概率最高的(或按概率采样),就是生成的那个词。&lt;/p&gt;
+&lt;h2&gt;本章小结&lt;/h2&gt;
+&lt;p&gt;编码器读懂(双向),解码器生成(因果掩码、自回归);解码器用交叉注意力(Q 来自解码器、K/V 来自编码器)连接源与目标;因果掩码用 −∞ 屏蔽未来,使训练并行而生成只看过去。&lt;/p&gt;
+&lt;h2&gt;练习&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;编码器与解码器在任务、看的方向、产出三方面有何不同?&lt;/li&gt;
+&lt;li&gt;交叉注意力中,Q、K、V 分别来自哪里?它的作用是什么?&lt;/li&gt;
+&lt;li&gt;因果掩码具体如何用 softmax 实现&quot;看不到未来&quot;?&lt;/li&gt;
+&lt;li&gt;训练(teacher forcing)与推理(自回归)的工作方式有何不同?&lt;/li&gt;
+&lt;/ol&gt;
+</content:encoded></item><item><title>Transformer 入门教材 · 第 1 章　为什么需要 Transformer</title><link>https://mikaily223.github.io/posts/2026/06/16/transformer%E6%95%99%E6%9D%90_%E7%AC%AC1%E7%AB%A0_%E4%B8%BA%E4%BB%80%E4%B9%88%E9%9C%80%E8%A6%81transformer/</link><guid isPermaLink="true">https://mikaily223.github.io/posts/2026/06/16/transformer%E6%95%99%E6%9D%90_%E7%AC%AC1%E7%AB%A0_%E4%B8%BA%E4%BB%80%E4%B9%88%E9%9C%80%E8%A6%81transformer/</guid><description>认识 Transformer 的前辈 RNN 与 LSTM，理解长距离依赖被稀释、无法并行这两个致命痛点，从而看清 Transformer &quot;抛弃循环&quot;的动机。</description><pubDate>Tue, 16 Jun 2026 00:00:00 GMT</pubDate><content:encoded>&lt;h1&gt;第 1 章　为什么需要 Transformer&lt;/h1&gt;
+&lt;p&gt;&lt;strong&gt;学习目标&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;理解序列数据为什么特殊,以及 RNN 如何处理它。&lt;/li&gt;
+&lt;li&gt;说清 RNN 的两个致命痛点。&lt;/li&gt;
+&lt;li&gt;理解 LSTM 缓解了什么、没解决什么,从而明白 Transformer 的动机。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;本章先不碰 Transformer 本身,而是认识它的前辈 RNN 和 LSTM,体会它们的痛点。理解了痛点,你才会明白 Transformer 那些设计为什么&quot;非这样不可&quot;。&lt;/p&gt;
+&lt;h2&gt;1.1　序列数据与顺序的重要性&lt;/h2&gt;
+&lt;p&gt;语言是一种序列数据:词一个接一个出现,而且&lt;strong&gt;顺序至关重要&lt;/strong&gt;。&quot;狗咬人&quot;和&quot;人咬狗&quot;用词完全相同,意思却相反。此外,句子长度还不固定。因此处理语言的模型必须做到两件事:既理解每个词,又能把前面读过的内容&quot;记在心里&quot;,用来理解后面的词。&lt;/p&gt;
+&lt;h2&gt;1.2　RNN:靠一个会更新的&quot;记忆&quot;&lt;/h2&gt;
+&lt;p&gt;RNN 的核心想法很符合直觉,就像你读句子的过程:从左到右一个词一个词地读,脑中始终维护着一份&quot;到目前为止的理解&quot;。每读到一个新词,就用&quot;新词 + 脑中已有的理解&quot;更新出一份新的理解。&lt;/p&gt;
+&lt;p&gt;这份&quot;脑中的理解&quot;在 RNN 里叫&lt;strong&gt;隐藏状态(hidden state)&lt;/strong&gt;,本质是一个向量。它的更新其实就是一个层,同时接收两样输入:当前这个词的向量,和上一步传来的隐藏状态。&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;词₁ → [RNN] → h₁
+              ↓（把记忆传给下一步）
+词₂ → [RNN] → h₂
+              ↓
+词₃ → [RNN] → h₃ → ……
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;每一步的 &lt;code&gt;h&lt;/code&gt; 都浓缩了&quot;从开头到现在&quot;读过的所有信息,再传给下一步。这种&quot;把状态一环扣一环传下去&quot;的结构,就叫&lt;strong&gt;循环(Recurrent)&lt;/strong&gt;。这个设计很优雅,但它有两个致命痛点。&lt;/p&gt;
+&lt;h2&gt;1.3　两大致命痛点&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;痛点一 · 长距离依赖被稀释&lt;/strong&gt;。看这句话:&quot;我在&lt;strong&gt;法国&lt;/strong&gt;长大,小时候搬过好几次家……所以我能说一口流利的 ____。&quot;要正确填出&quot;法语&quot;,模型必须记得开头的&quot;法国&quot;。但在 RNN 里,这条信息要从第一个词经过几十个隐藏状态一环环传到结尾——就像一句话在很多人之间口耳相传,传到最后早就走样或丢失了。距离越远,信息被稀释得越厉害。在训练上,这表现为有名的&quot;梯度消失&quot;问题。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;痛点二 · 无法并行&lt;/strong&gt;。注意上面那张图:&lt;code&gt;h₂&lt;/code&gt; 必须等 &lt;code&gt;h₁&lt;/code&gt; 算完才能算,&lt;code&gt;h₃&lt;/code&gt; 又必须等 &lt;code&gt;h₂&lt;/code&gt;。每一步都依赖上一步,所以只能一个词一个词地排队计算,无法同时进行。这意味着 RNN 用不上现代 GPU&quot;一次算一大批&quot;的能力,句子越长,训练越慢。&lt;/p&gt;
+&lt;h2&gt;1.4　LSTM:打了补丁,但没断根&lt;/h2&gt;
+&lt;p&gt;为了缓解&quot;记不住远处信息&quot;的问题,人们改进出了 LSTM。它在 RNN 的基础上加了一条专门的&quot;记忆传送带&quot;,以及几个叫**门(gate)**的开关。&lt;/p&gt;
+&lt;p&gt;门的本质是一组 0 到 1 之间的&quot;阀门&quot;值——0 表示完全关闭、不让信息通过,1 表示完全放行。这些 0 到 1 的值由 &lt;strong&gt;sigmoid&lt;/strong&gt; 函数把任意数挤压而来,再用&quot;对应位置相乘&quot;去控制信息通过多少。三个门各管一摊:遗忘门决定抹掉哪些旧记忆,输入门决定写入多少新信息,输出门决定这一步对外输出什么。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;关键&lt;/strong&gt;:门&quot;该记什么、忘什么&quot;不是人手写死的规则,而是在训练中通过梯度下降&lt;strong&gt;学出来&lt;/strong&gt;的。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;但请记住:LSTM 只&lt;strong&gt;缓解了痛点一(长距离)&lt;/strong&gt;,对&lt;strong&gt;痛点二(并行)无能为力&lt;/strong&gt;——它骨子里仍是&quot;一个词一个词顺序处理&quot;的循环结构。&lt;/p&gt;
+&lt;h2&gt;1.5　Transformer 的破局思路&lt;/h2&gt;
+&lt;p&gt;到这里你已能看出问题的核心:麻烦全都来自&quot;循环&quot;——信息非得沿着一条长链一环环传递。Transformer 做了一个大胆的决定:&lt;strong&gt;干脆把循环彻底扔掉&lt;/strong&gt;。它让句子里的每个词,都能&quot;一步直达&quot;地去看其他所有词,并自己判断该重点关注谁。&lt;/p&gt;
+&lt;p&gt;这一招同时干掉了两个痛点:第一个词和第一百个词可以&lt;strong&gt;直接&lt;/strong&gt;建立联系,不再被中间环节稀释(解决长距离);而&quot;所有词同时互相查看&quot;的操作本质是几次大矩阵乘法,&lt;strong&gt;天然可以并行&lt;/strong&gt;(解决速度)。实现这个想法的机制,就叫&lt;strong&gt;注意力(Attention)&lt;/strong&gt;,也是下一章的主角。&lt;/p&gt;
+&lt;h2&gt;本章小结&lt;/h2&gt;
+&lt;p&gt;RNN 用隐藏状态顺序处理序列,但受困于长距离稀释与无法并行;LSTM 用门控缓解了前者,却没解决后者。Transformer 抛弃循环、改用注意力,一举解决两个痛点。&lt;/p&gt;
+&lt;h2&gt;练习&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;RNN 的两个痛点分别是什么?Transformer 分别用什么思路解决?&lt;/li&gt;
+&lt;li&gt;LSTM 的&quot;门&quot;是用什么手段实现 0~1 的阀门效果的?它的决策来自哪里?&lt;/li&gt;
+&lt;li&gt;LSTM 解决了两个痛点中的哪一个?另一个呢?&lt;/li&gt;
+&lt;/ol&gt;
+</content:encoded></item><item><title>Transformer 入门教材 · 第 2 章　注意力机制(核心)</title><link>https://mikaily223.github.io/posts/2026/06/16/transformer%E6%95%99%E6%9D%90_%E7%AC%AC2%E7%AB%A0_%E6%B3%A8%E6%84%8F%E5%8A%9B%E6%9C%BA%E5%88%B6/</link><guid isPermaLink="true">https://mikaily223.github.io/posts/2026/06/16/transformer%E6%95%99%E6%9D%90_%E7%AC%AC2%E7%AB%A0_%E6%B3%A8%E6%84%8F%E5%8A%9B%E6%9C%BA%E5%88%B6/</guid><description>Transformer 的心脏。用点积算相关性、softmax 转权重、对 Value 加权求和；理解 Query / Key / Value 三个角色，走通自注意力流程并看懂那个著名公式。</description><pubDate>Tue, 16 Jun 2026 00:00:00 GMT</pubDate><content:encoded>&lt;h1&gt;第 2 章　注意力机制(核心)&lt;/h1&gt;
+&lt;p&gt;&lt;strong&gt;学习目标&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;用一句话说清注意力在做什么。&lt;/li&gt;
+&lt;li&gt;理解 Query / Key / Value 三个角色及其分工。&lt;/li&gt;
+&lt;li&gt;完整走通自注意力的计算流程,并看懂那个著名公式。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;这是整个 Transformer 的心脏。好消息是:第 0 章学的点积、softmax、矩阵乘法,在这一章会全部汇合。&lt;/p&gt;
+&lt;h2&gt;2.1　核心直觉:基于相关性的加权求和&lt;/h2&gt;
+&lt;p&gt;看这句话:&quot;那只动物没能过马路,因为&lt;strong&gt;它&lt;/strong&gt;太累了。&quot;这里的&quot;它&quot;指什么?是&quot;动物&quot;。可&quot;它&quot;这个字本身没什么信息,模型要搞清楚它指谁,就必须回头看别的词,而且要&lt;strong&gt;重点关注&quot;动物&quot;、不太理会&quot;马路&quot;&lt;/strong&gt;。&lt;/p&gt;
+&lt;p&gt;注意力机制做的就是这件事:&lt;strong&gt;给每个词生成一个新的表示,这个新表示是&quot;句子里所有词的信息&quot;的加权求和,而权重的大小,取决于每个词跟它有多相关&lt;/strong&gt;。&lt;/p&gt;
+&lt;p&gt;拆出来就是两个动作:先算&quot;该关注谁多少&quot;(相关性权重),再&quot;按权重把大家的信息汇总起来&quot;(加权求和)。这两步你都会:相关性用&lt;strong&gt;点积&lt;/strong&gt;算,权重用 &lt;strong&gt;softmax&lt;/strong&gt; 归一化,最后做&lt;strong&gt;加权求和&lt;/strong&gt;。整个注意力,就是这三样东西的组合。&lt;/p&gt;
+&lt;h2&gt;2.2　Query、Key、Value&lt;/h2&gt;
+&lt;p&gt;为了把上面的想法做精细,Transformer 给每个词配了三个角色,用一次&quot;检索&quot;来理解最为贴切:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Query(查询)&lt;/strong&gt;:我现在想找什么。——相当于你心里的搜索词。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Key(键)&lt;/strong&gt;:每个词对外挂出的&quot;标签&quot;,用来和别人的查询做匹配。——相当于每本书的索引标签。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Value(值)&lt;/strong&gt;:这个词真正携带、准备贡献出去的信息内容。——相当于书里的实际内容。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;流程是:拿你的 Query 去和每个词的 Key 做匹配(点积,看有多吻合)→ 把匹配分数转成权重(softmax)→ 按权重去汇总各词的 Value。谁的 Key 和你的 Query 最对得上,谁的 Value 就在结果里占最大份额。&lt;/p&gt;
+&lt;p&gt;这三个向量从哪来?每个词用自己的词向量,分别乘上三个&lt;strong&gt;待学习的权重矩阵 W_Q、W_K、W_V&lt;/strong&gt;,就生成出它自己的 Query、Key、Value。还记得吗——乘一个权重矩阵,就是过一个线性层。因为查询、键、值全都来自同一句话里的这些词、它们互相之间做注意力,所以这套机制叫&lt;strong&gt;自注意力(Self-Attention)&lt;/strong&gt;。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;务必分清&lt;/strong&gt;:做相似度匹配用的是 &lt;strong&gt;Key&lt;/strong&gt;;被加权求和、真正流进新表示的是 &lt;strong&gt;Value&lt;/strong&gt;。Key 和 Value 拆成两个独立向量,是因为&quot;一个词凭什么值得被关注&quot;和&quot;它能提供什么有用信息&quot;不一定相同。比如某个词的标签(Key)是&quot;数学&quot;,但你真正想从它那里取走的内容(Value)可能是&quot;代数&quot;。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2&gt;2.3　自注意力完整流程&lt;/h2&gt;
+&lt;p&gt;以&quot;它&quot;这个词为例,看它如何通过注意力搞清自己指代谁:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&quot;它&quot;拿出自己的 Query 向量 q。&lt;/li&gt;
+&lt;li&gt;句子里每个词(包括&quot;它&quot;自己)都亮出自己的 Key 向量。&lt;/li&gt;
+&lt;li&gt;用 q 和每个词的 Key 做&lt;strong&gt;点积&lt;/strong&gt;,得到一串相关性分数。&quot;它&quot;的 Query 和&quot;动物&quot;的 Key 会得到很高的分。&lt;/li&gt;
+&lt;li&gt;把这些分数&lt;strong&gt;除以 √d 缩放&lt;/strong&gt;(d 是向量维度)。这是因为点积会随维度变大而变得过大,缩放能把分数压在合理范围,避免 softmax 后过于极端。&lt;/li&gt;
+&lt;li&gt;把缩放后的分数过 &lt;strong&gt;softmax&lt;/strong&gt;,得到一组加起来为 1 的权重,例如:动物 0.7,马路 0.1,它自己 0.2。&lt;/li&gt;
+&lt;li&gt;按这组权重,对各个词的 &lt;strong&gt;Value 向量做加权求和&lt;/strong&gt;,得到&quot;它&quot;的新表示。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;注意&lt;/strong&gt;:权重是&lt;strong&gt;混合比例&lt;/strong&gt;(像混音台上每条音轨的音量推杆),不是&quot;可信度&quot;;而且最终结果是&lt;strong&gt;所有 Value 的加权混合&lt;/strong&gt;,不是&quot;赢家通吃&quot;只取最高的那一个。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;一个具体的加权求和例子:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;权重:   动物 0.7,  马路 0.1,  它 0.2
+Value:  动物[2,0], 马路[0,4], 它[1,1]
+
+新表示 = 0.7×[2,0] + 0.1×[0,4] + 0.2×[1,1]
+       = [1.4,0] + [0,0.4] + [0.2,0.2]
+       = [1.6, 0.6]
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;因为&quot;动物&quot;权重最大,&quot;它&quot;的新表示主要由&quot;动物&quot;的信息主导——&quot;它&quot;成功地把&quot;动物&quot;的含义吸收了进来。这就是注意力的全部魔法。&lt;/p&gt;
+&lt;h2&gt;2.4　公式&lt;/h2&gt;
+&lt;p&gt;把上面对所有词同时进行的操作写成一个式子,就是大名鼎鼎的:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;Attention(Q, K, V) = softmax( Q·Kᵀ / √d ) · V
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;逐块对照你刚做的事:Q、K、V 是把所有词的查询、键、值各自堆成的矩阵(一行一个词);&lt;code&gt;Q·Kᵀ&lt;/code&gt; 一次性算出所有词两两之间的点积分数;&lt;code&gt;/√d&lt;/code&gt; 是缩放;&lt;code&gt;softmax&lt;/code&gt; 把每行分数变成权重;最后乘上 &lt;code&gt;V&lt;/code&gt;,就是对 Value 做加权求和。&lt;strong&gt;唯一的区别是:它用矩阵乘法,把全句所有词的这套流程一次并行算完了。&lt;/strong&gt;&lt;/p&gt;
+&lt;h2&gt;2.5　回收两大痛点&lt;/h2&gt;
+&lt;p&gt;回头看第 1 章 RNN 的两大痛点,注意力一招同时解决:第一个词的 Query 可以&lt;strong&gt;直接&lt;/strong&gt;和第一百个词的 Key 做点积,不必经过中间环节的稀释(长距离);整个过程就是几次大矩阵乘法,全句所有词&lt;strong&gt;同时处理&lt;/strong&gt;(并行)。&lt;/p&gt;
+&lt;h2&gt;本章小结&lt;/h2&gt;
+&lt;p&gt;注意力 = 用点积算相关性 → 用 softmax 转权重 → 对 Value 做加权求和。Query 提问、Key 匹配、Value 提供内容;÷√d 防止分数过大。它天然解决了长距离与并行两个问题。&lt;/p&gt;
+&lt;h2&gt;练习&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;一句话分别说出 Query、Key、Value 的角色。&lt;/li&gt;
+&lt;li&gt;为什么要把 Key 和 Value 设计成两个不同的向量?&lt;/li&gt;
+&lt;li&gt;已知某词对三个词的权重为 &lt;code&gt;[0.5, 0.3, 0.2]&lt;/code&gt;,三词 Value 为 &lt;code&gt;[2,0]&lt;/code&gt;、&lt;code&gt;[0,2]&lt;/code&gt;、&lt;code&gt;[1,1]&lt;/code&gt;,求加权求和后的新表示。&lt;/li&gt;
+&lt;li&gt;公式中除以 √d 的目的是什么?&lt;/li&gt;
+&lt;/ol&gt;
+</content:encoded></item><item><title>Transformer 入门教材 · 第 3 章　完整的 Transformer 模块</title><link>https://mikaily223.github.io/posts/2026/06/16/transformer%E6%95%99%E6%9D%90_%E7%AC%AC3%E7%AB%A0_%E5%AE%8C%E6%95%B4%E7%9A%84transformer%E6%A8%A1%E5%9D%97/</link><guid isPermaLink="true">https://mikaily223.github.io/posts/2026/06/16/transformer%E6%95%99%E6%9D%90_%E7%AC%AC3%E7%AB%A0_%E5%AE%8C%E6%95%B4%E7%9A%84transformer%E6%A8%A1%E5%9D%97/</guid><description>在注意力之上加装多头注意力、位置编码、前馈网络、残差连接、层归一化，拼出一个可堆叠的完整 Transformer 模块（编码器）。</description><pubDate>Tue, 16 Jun 2026 00:00:00 GMT</pubDate><content:encoded>&lt;h1&gt;第 3 章　完整的 Transformer 模块&lt;/h1&gt;
+&lt;p&gt;&lt;strong&gt;学习目标&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;理解多头注意力解决了单头的什么局限。&lt;/li&gt;
+&lt;li&gt;理解位置编码补救了注意力的什么缺陷。&lt;/li&gt;
+&lt;li&gt;理解前馈网络、残差连接、层归一化各自的作用,并能拼出一个完整模块。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;本章在注意力之上加装几个关键零件,拼出一个完整的 Transformer 模块。&lt;/p&gt;
+&lt;h2&gt;3.1　多头注意力&lt;/h2&gt;
+&lt;p&gt;你现在掌握的注意力,每个词只能按&lt;strong&gt;一种&lt;/strong&gt;&quot;相关性&quot;去汇总信息。但词与词的关系是多种多样、同时存在的:&quot;它&quot;既要搞清楚指代哪个名词(语义),又可能想知道自己是哪个动词的主语(语法),还可能关心前后挨着哪些词(邻近)。单独一套 Q/K/V 只能算出一种注意力模式,顾此失彼。&lt;/p&gt;
+&lt;p&gt;解决办法很直接:&lt;strong&gt;同时跑好几套独立的注意力,每套都有自己的 W_Q、W_K、W_V&lt;/strong&gt;,每一套叫一个&quot;头(head)&quot;。因为权重矩阵各自独立、各自训练,每个头会自发地学会专注于一种不同的关系。最后把所有头的结果拼接起来,再过一个线性层融合成一个输出。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;两个易错点&lt;/strong&gt;:其一,头的数量是设计选项,常见 8、12 乃至上百个,并不固定;其二,各个头&quot;专攻哪种关系&quot;是它们在&lt;strong&gt;训练中自己分化&lt;/strong&gt;出来的,&lt;strong&gt;不是人指派&lt;/strong&gt;的,而且&quot;一头一职&quot;只是帮助理解的粗略图景。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;补一个实用细节:若总维度是 d、有 h 个头,通常每个头只在 d/h 的小维度里工作,所以总计算量与单头时相当,等于把同样的预算拆成几份各看一个角度。&lt;/p&gt;
+&lt;h2&gt;3.2　位置编码&lt;/h2&gt;
+&lt;p&gt;这里有个特别精妙的洞察:&lt;strong&gt;注意力机制本身,其实根本不知道顺序&lt;/strong&gt;。回想它的计算——一堆基于点积的加权求和。如果你把句子里词的顺序打乱,那些两两点积和加权求和的结果完全不变。也就是说,在注意力眼里,一句话只是&quot;一袋子词&quot;,而不是&quot;一串有先后的词&quot;。这正是它能高度并行的代价。&lt;/p&gt;
+&lt;p&gt;但&quot;狗咬人&quot;与&quot;人咬狗&quot;意思相反,顺序绝不能丢。怎么补回来?办法很巧:在把词向量送进注意力之前,&lt;strong&gt;给每个位置额外加上一个&quot;位置向量&quot;&lt;/strong&gt;。第 1 个位置加一种向量,第 2 个位置加另一种……这样送进去的就不再是单纯的&quot;词义&quot;,而是&quot;词义 + 它在第几位&quot;。注意力虽然分不清顺序,但既然位置信息已掺进输入,它就能学着利用了。&lt;/p&gt;
+&lt;p&gt;那个位置向量,原始论文用一套固定的&lt;strong&gt;正弦/余弦波&lt;/strong&gt;(不同频率)给每个位置生成独一无二的&quot;指纹&quot;;后来也有可学习式、相对位置(如 RoPE)等变体,但目的都一样——把顺序信息注入进去。&lt;/p&gt;
+&lt;h2&gt;3.3　前馈网络(FFN)&lt;/h2&gt;
+&lt;p&gt;注意力擅长在词与词之间&lt;strong&gt;搬运、混合&lt;/strong&gt;信息,但它本质是加权求和,没怎么对信息做深加工。于是在注意力之后,接一个前馈网络:&lt;strong&gt;把每个词的向量,单独送进一个小网络里处理一遍&lt;/strong&gt;(同一个网络分别作用在每个词上)。这个网络就是第 0 章学的东西——两个线性层中间夹一个激活函数,通常先升到 4 倍维度,再压回原维度。&lt;/p&gt;
+&lt;p&gt;所以一个模块里的分工很清晰:&lt;strong&gt;注意力负责&quot;收集&quot;(从别的词那里取相关信息),前馈网络负责&quot;加工&quot;(让每个词独自把信息再思考一遍)&lt;/strong&gt;。&lt;/p&gt;
+&lt;h2&gt;3.4　残差连接&lt;/h2&gt;
+&lt;p&gt;Transformer 要把很多模块叠得很深(几十甚至上百层),但信息和梯度在层层传递中会衰减,网络一深就难训。解法巧妙得令人发指:本来一层做的是 &lt;code&gt;输出 = 某层(输入)&lt;/code&gt;,现在改成:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;输出 = 输入 + 某层(输入)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;也就是把这层的原始输入,直接加回到它的输出上。这相当于修了一条绕过该层的&quot;高速旁路&quot;:信息可以直接穿过,梯度回传也有一条近路;而且每一层不必从零重建一切,只需学习&quot;该在输入上做的微调&quot;。正是这条旁路,让网络能放心地往深里叠。&lt;/p&gt;
+&lt;p&gt;单看一处残差,加回来的是&lt;strong&gt;该子层自己的输入&lt;/strong&gt;(上一步的结果);但因为层层都这么做,主干会不断累加——展开后约等于&quot;最初的词向量 + 沿途每层各自的贡献之和&quot;。这条贯穿始终的主干,业内称为&quot;残差流&quot;。&lt;/p&gt;
+&lt;h2&gt;3.5　层归一化&lt;/h2&gt;
+&lt;p&gt;数据流过很多层之后,里面的数值可能越漂越大或越缩越小,导致训练不稳定。层归一化在关键位置把每个词的向量&lt;strong&gt;重新缩放到标准范围&lt;/strong&gt;(大致均值 0、方差 1),再用可学习的参数微调。打个比方,它就像在音响每一级之间装个自动音量平衡器,保证信号既不爆音也不至于消失,始终待在健康稳定的区间,让训练又稳又快。&lt;/p&gt;
+&lt;h2&gt;3.6　拼装一个完整模块&lt;/h2&gt;
+&lt;p&gt;把&quot;多头自注意力&quot;和&quot;前馈网络&quot;两个子层,各自用&quot;残差 + 层归一化&quot;包起来,串在一起:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;       输入向量（已加位置编码）
+              │
+        ┌─────┴─────┐
+        │  多头自注意力 │
+        └─────┬─────┘
+         (相加：残差)
+              │
+          层归一化
+              │
+        ┌─────┴─────┐
+        │  前馈网络 FFN │
+        └─────┬─────┘
+         (相加：残差)
+              │
+          层归一化
+              │
+              ▼
+        输出（交给下一个模块）
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;然后把这样一个模块&lt;strong&gt;原样堆叠 N 份&lt;/strong&gt;(比如 6、12、96 层),前一个模块的输出喂给后一个。每经过一层,每个词的表示就被进一步精炼。这一整摞模块,就构成了 Transformer 的&lt;strong&gt;编码器(Encoder)&lt;/strong&gt;。&lt;/p&gt;
+&lt;h2&gt;本章小结&lt;/h2&gt;
+&lt;p&gt;多头让模型从多个角度看关系(分工由训练自学);位置编码补回注意力丢失的顺序;前馈网络让每词独自加工;残差让网络可叠深;层归一化稳住数值。它们与注意力一起,组成可堆叠的 Transformer 模块。&lt;/p&gt;
+&lt;h2&gt;练习&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;多头注意力解决了单头的什么局限?各头的分工是谁决定的?&lt;/li&gt;
+&lt;li&gt;为什么说注意力&quot;本身不知道顺序&quot;?如何补救?&lt;/li&gt;
+&lt;li&gt;一个模块里,注意力子层和前馈子层各自的职责是什么?&lt;/li&gt;
+&lt;li&gt;残差连接 &lt;code&gt;输出 = 输入 + 层(输入)&lt;/code&gt; 为什么能让网络叠得很深?&lt;/li&gt;
+&lt;/ol&gt;
+</content:encoded></item><item><title>Transformer 入门教材 · 第 0 章　数学与神经网络基础</title><link>https://mikaily223.github.io/posts/2026/06/16/transformer%E6%95%99%E6%9D%90_%E7%AC%AC0%E7%AB%A0_%E6%95%B0%E5%AD%A6%E4%B8%8E%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E5%9F%BA%E7%A1%80/</link><guid isPermaLink="true">https://mikaily223.github.io/posts/2026/06/16/transformer%E6%95%99%E6%9D%90_%E7%AC%AC0%E7%AB%A0_%E6%95%B0%E5%AD%A6%E4%B8%8E%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E5%9F%BA%E7%A1%80/</guid><description>从向量、点积、矩阵乘法、softmax 到神经元、层、激活函数，再到损失、反向传播、梯度下降——为后续注意力机制打好全部数学地基。</description><pubDate>Tue, 16 Jun 2026 00:00:00 GMT</pubDate><content:encoded>&lt;h1&gt;Transformer 入门教材&lt;/h1&gt;
+&lt;blockquote&gt;
+&lt;p&gt;从数学基础到三大变体(BERT / GPT / T5),一本可以从头自学的教材。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2&gt;写在前面&lt;/h2&gt;
+&lt;p&gt;这本教材面向&lt;strong&gt;想真正理解 Transformer、而不只是会调用它&lt;/strong&gt;的初学者。它假设你具备高中水平的数学,不要求你提前懂机器学习——所有需要的前置知识都会在第 0 章补齐。&lt;/p&gt;
+&lt;p&gt;阅读建议:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;按顺序读&lt;/strong&gt;。后面的每一个设计,几乎都是为了解决前面暴露出来的问题,跳读会错过这条因果链。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;动手算小例子&lt;/strong&gt;。书中的数值例子都很小,请拿笔跟着算一遍,远比只看公式有效。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;每章末尾有小结和练习&lt;/strong&gt;,做完练习再进入下一章。书末附有综合测试与参考答案。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;全书共六章:第 0 章打地基;第 1 章讲清&quot;为什么需要 Transformer&quot;;第 2、3 章拆解它的核心与完整模块;第 4 章讲它如何生成文字;第 5 章把它和你日常使用的大模型连起来。&lt;/p&gt;
+&lt;hr /&gt;
+&lt;h1&gt;第 0 章　数学与神经网络基础&lt;/h1&gt;
+&lt;p&gt;&lt;strong&gt;学习目标&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;理解向量、点积、矩阵乘法、softmax 四个数学工具,并能手算小例子。&lt;/li&gt;
+&lt;li&gt;理解神经元、层、激活函数,知道&quot;一层&quot;为什么等价于一次矩阵乘法。&lt;/li&gt;
+&lt;li&gt;用自己的话说清模型是如何通过损失、反向传播、梯度下降&quot;学习&quot;的。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;整个 Transformer 没有任何高深的数学魔法,它只是把本章这几样基本工具巧妙地组装起来。记住一个贯穿全书的目标:&lt;strong&gt;本章的四个数学工具,恰好就是后面注意力机制公式里的全部零件&lt;/strong&gt;。学完本章再看那个公式,你会发现每一块都认识。&lt;/p&gt;
+&lt;h2&gt;0.1　向量与点积&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;向量&lt;/strong&gt;就是一串有序的数字,例如 &lt;code&gt;[0.2, -1.3, 0.8]&lt;/code&gt;。它有几个分量,就称为几维向量。在 Transformer 中,每一个词(更准确地说是 token)都会被转换成一个向量,这个向量称为&lt;strong&gt;词嵌入(embedding)&lt;/strong&gt;。你只需要建立一个直觉:&lt;strong&gt;意思相近的词,它们的向量在空间中也彼此靠近&lt;/strong&gt;——&quot;猫&quot;和&quot;狗&quot;的向量,会比&quot;猫&quot;和&quot;汽车&quot;的更接近。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;点积&lt;/strong&gt;是两个向量之间一种最基本的运算:把对应位置的数字相乘,再全部加起来。&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;a = [1, 2, 3],  b = [4, 5, 6]
+a · b = 1×4 + 2×5 + 3×6 = 4 + 10 + 18 = 32
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;算法很简单,但它的&lt;strong&gt;含义&lt;/strong&gt;才是关键:点积衡量两个向量有多&quot;对齐&quot;、多相似。结果是一个大正数,说明两个向量方向相近(相似);接近零,说明它们几乎无关;是负数,说明方向相反。&lt;/p&gt;
+&lt;p&gt;更精确地说,点积同时混入了两样东西:&lt;code&gt;a · b = |a| × |b| × cos(夹角)&lt;/code&gt;。其中 &lt;code&gt;cos(夹角)&lt;/code&gt; 是纯粹的&quot;方向相似度&quot;,而点积还乘上了两个向量各自的长度。这意味着一个数值很大的向量,哪怕方向没那么吻合,也可能靠&quot;个头大&quot;刷出较高的点积。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;为什么重要&lt;/strong&gt;:在注意力机制中,&quot;两个词有多相关&quot;这个判断,就是用它们向量的点积算出来的。请把&quot;点积 = 相似度&quot;刻在脑子里。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2&gt;0.2　矩阵乘法&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;矩阵&lt;/strong&gt;就是把数字排成表格(若干行若干列)。你可以把它看成&quot;一摞向量&quot;,也可以看成一种&quot;变换器&quot;——输入一个向量,输出一个新向量。&lt;/p&gt;
+&lt;p&gt;矩阵乘法的规则依然是点积:用左边矩阵的&lt;strong&gt;每一行&lt;/strong&gt;,分别去和右边的&lt;strong&gt;每一列&lt;/strong&gt;做点积。&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;A = [1 2]      x = [5]
+    [3 4]          [6]
+
+A·x 第一个分量 = 第一行 · x = 1×5 + 2×6 = 17
+A·x 第二个分量 = 第二行 · x = 3×5 + 4×6 = 39
+结果 = [17, 39]
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;能相乘有一个前提:&lt;strong&gt;左边矩阵的列数,必须等于右边矩阵的行数&lt;/strong&gt;。这就是为什么以后你会频繁看到大家讨论&quot;维度对不对得上&quot;。&lt;/p&gt;
+&lt;p&gt;矩阵乘法的意义极其重大:&lt;strong&gt;神经网络的一层,本质上就是一次矩阵乘法&lt;/strong&gt;。而且,你可以把一句话里所有词的向量堆成一个矩阵,用一次矩阵乘法同时处理完它们——这正是后面 Transformer 能够&lt;strong&gt;并行计算&lt;/strong&gt;的根源。&lt;/p&gt;
+&lt;h2&gt;0.3　Softmax&lt;/h2&gt;
+&lt;p&gt;设想你手上有几个原始分数,比如 &lt;code&gt;[2, 1, 0]&lt;/code&gt;,有大有小。你希望把它们转换成一组&lt;strong&gt;权重&lt;/strong&gt;:全部为正、并且加起来正好等于 1(也就是一个概率分配)。&lt;strong&gt;Softmax&lt;/strong&gt; 做的就是这件事。&lt;/p&gt;
+&lt;p&gt;它分两步:先对每个数做指数运算 &lt;code&gt;e^x&lt;/code&gt;(保证结果为正,并把差距拉大),再让每个数除以它们的总和。&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;分数 = [2, 1, 0]
+取指数:e^2 ≈ 7.39,  e^1 ≈ 2.72,  e^0 = 1
+总和 ≈ 7.39 + 2.72 + 1 = 11.11
+结果 ≈ [0.665, 0.245, 0.090]   （三者相加 = 1）
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;注意 softmax 会&lt;strong&gt;放大差距&lt;/strong&gt;:原本 2 只比 1 大一点,转换后 0.665 却接近 0.245 的三倍。&lt;/p&gt;
+&lt;p&gt;softmax 在 Transformer 里出现在多个地方:注意力用它把&quot;相关性分数&quot;变成&quot;该分配多少注意力&quot;的权重;掩码用它把某些位置压成 0;模型最后预测下一个词时,也用它给每个候选词打出概率。&lt;/p&gt;
+&lt;h2&gt;0.4　神经元与层&lt;/h2&gt;
+&lt;p&gt;一个&lt;strong&gt;神经元&lt;/strong&gt;做两步事。第一步:把输入的每个数乘上各自的权重(weight),加起来,再加一个偏置(bias);第二步:把结果送进一个&quot;激活函数&quot;。写成式子就是:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;输出 = 激活函数( w·x + b )
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;注意 &lt;code&gt;w·x&lt;/code&gt; 正是点积。它衡量的是&quot;输入 x 和权重 w 有多像&quot;——你可以把权重向量 &lt;code&gt;w&lt;/code&gt; 想象成这个神经元&quot;专门要找的一个模板&quot;,&lt;code&gt;w·x&lt;/code&gt; 越大,表示输入越符合这个模板,神经元反应越强。所以一个神经元本质上是个&lt;strong&gt;特征探测器&lt;/strong&gt;。&lt;/p&gt;
+&lt;p&gt;那个偏置 &lt;code&gt;b&lt;/code&gt; 是一个&lt;strong&gt;可学习的门槛&lt;/strong&gt;:它把整个加权和上下平移,相当于给神经元设定一条&quot;及格线&quot;——输入要和模板吻合到什么程度,才算真正激活。请注意,&lt;code&gt;b&lt;/code&gt; 的作用是&quot;设门槛&quot;,不是&quot;防止数值太小&quot;。&lt;/p&gt;
+&lt;p&gt;把很多神经元并排放在一起,就构成一&lt;strong&gt;层&lt;/strong&gt;。当你把一层里所有神经元的权重堆在一起,整层做的事正好就是一次矩阵乘法 &lt;code&gt;W·x + b&lt;/code&gt;。这种最基础的层叫&lt;strong&gt;线性层 / 全连接层&lt;/strong&gt;。记住这个名字,后面 Transformer 内部到处都是它。&lt;/p&gt;
+&lt;h2&gt;0.5　激活函数&lt;/h2&gt;
+&lt;p&gt;为什么神经元一定要有激活函数这一步?因为如果没有它,把很多线性层叠起来,在数学上仍然等价于&lt;strong&gt;一个&lt;/strong&gt;线性层——叠一百层和叠一层没有区别,网络学不到复杂的模式。激活函数引入了&quot;弯曲&quot;(非线性),让网络能够拟合复杂的关系。&lt;/p&gt;
+&lt;p&gt;最常见的激活函数是 ReLU,规则简单到极致:&lt;code&gt;ReLU(x) = max(0, x)&lt;/code&gt;,即负数全部归零,正数原样保留。Transformer 中常用它的平滑版本 GELU,但你现在理解 ReLU 的思路就足够了——它们的作用都一样:制造非线性。&lt;/p&gt;
+&lt;h2&gt;0.6　模型是怎么&quot;学&quot;的&lt;/h2&gt;
+&lt;p&gt;把若干层串起来:输入 → 线性层 → 激活函数 → 线性层 → …… → 输出。层数越多网络越&quot;深&quot;,这就是&quot;深度学习&quot;里&quot;深度&quot;二字的由来。但此刻网络里的权重全是随机的,它什么也不会。它如何学会任务?分三步理解,这三步串成一条线。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;损失函数(Loss)&lt;/strong&gt;:给网络喂一个输入,它给出一个预测;我们手上有正确答案;损失函数用来量化&quot;预测离正确答案有多远&quot;。预测越准,损失越小。学习的目标就是把损失降到最低。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;反向传播(Backpropagation)&lt;/strong&gt;:网络里可能有上亿个权重,我们怎么知道每个权重该往哪个方向、调多少?反向传播就是高效计算这件事的算法。它从损失出发,利用链式法则一层层往回推,算出每个权重的&lt;strong&gt;梯度&lt;/strong&gt;——也就是&quot;该往哪个方向、改多大才能降低损失&quot;。注意:它只产出这个&quot;方向信息&quot;,自己并不动手改权重。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;梯度下降(Gradient Descent)&lt;/strong&gt;:用一个比喻——你蒙着眼站在山坡上,想走到山谷最低点(损失最小)。你感知脚下哪个方向最陡,朝下坡迈一小步,再感知、再迈一小步,直到谷底。这里&quot;最陡的下坡方向&quot;就是梯度,&quot;迈多大一步&quot;叫学习率。梯度下降拿着反向传播算出的梯度,&lt;strong&gt;真正去更新权重&lt;/strong&gt;。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;口诀&lt;/strong&gt;:反向传播管&quot;算账&quot;(算出每个权重该怎么改),梯度下降管&quot;花钱&quot;(照着账单真正去改)。两者配合,网络就在一轮轮训练中慢慢学会任务。实践中这些都由 PyTorch 这类框架自动完成。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2&gt;本章小结&lt;/h2&gt;
+&lt;p&gt;词被表示成&lt;strong&gt;向量&lt;/strong&gt;;网络用&lt;strong&gt;线性层(矩阵乘法)&lt;strong&gt;和&lt;/strong&gt;激活函数&lt;/strong&gt;层层加工向量;&lt;strong&gt;点积&lt;/strong&gt;衡量相似、&lt;strong&gt;softmax&lt;/strong&gt; 把分数转成权重;整个网络通过&lt;strong&gt;损失 + 反向传播 + 梯度下降&lt;/strong&gt;学会任务。这套东西就是后面所有内容的地基。&lt;/p&gt;
+&lt;h2&gt;练习&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;计算 &lt;code&gt;[1, 0, 2] · [3, 1, 1]&lt;/code&gt;。&lt;/li&gt;
+&lt;li&gt;对分数 &lt;code&gt;[3, 1, 1]&lt;/code&gt; 做 softmax,不必算精确值,回答:哪个权重最大?三个权重之和是多少?&lt;/li&gt;
+&lt;li&gt;用自己的话说明:神经元里的 &lt;code&gt;w·x&lt;/code&gt; 和 &lt;code&gt;b&lt;/code&gt; 各自的作用是什么?&lt;/li&gt;
+&lt;li&gt;如果把网络里所有激活函数都删掉,叠很多层会发生什么?为什么?&lt;/li&gt;
+&lt;/ol&gt;
+</content:encoded></item><item><title>Hello world!</title><link>https://mikaily223.github.io/posts/2026/06/11/hello-world/</link><guid isPermaLink="true">https://mikaily223.github.io/posts/2026/06/11/hello-world/</guid><description>你好，世界！</description><pubDate>Thu, 11 Jun 2026 00:00:00 GMT</pubDate><content:encoded>&lt;h1&gt;Hello World&lt;/h1&gt;
 &lt;p&gt;xixixi&lt;/p&gt;
 </content:encoded></item><item><title>上班摸鱼大法</title><link>https://mikaily223.github.io/posts/2026/06/11/%E4%B8%8A%E7%8F%AD%E6%91%B8%E9%B1%BC%E5%A4%A7%E6%B3%95/</link><guid isPermaLink="true">https://mikaily223.github.io/posts/2026/06/11/%E4%B8%8A%E7%8F%AD%E6%91%B8%E9%B1%BC%E5%A4%A7%E6%B3%95/</guid><description>随便写写，随便做做</description><pubDate>Thu, 11 Jun 2026 00:00:00 GMT</pubDate><content:encoded>&lt;h1&gt;「」&lt;/h1&gt;
 </content:encoded></item><item><title>金铲铲三板甲剑魔思路总结</title><link>https://mikaily223.github.io/posts/2026/06/11/%E9%87%91%E9%93%B2%E9%93%B2%E4%B8%89%E6%9D%BF%E7%94%B2%E5%89%91%E9%AD%94/</link><guid isPermaLink="true">https://mikaily223.github.io/posts/2026/06/11/%E9%87%91%E9%93%B2%E9%93%B2%E4%B8%89%E6%9D%BF%E7%94%B2%E5%89%91%E9%AD%94/</guid><description>苟分思路，前四还是老八我说了算！</description><pubDate>Thu, 11 Jun 2026 00:00:00 GMT</pubDate><content:encoded>&lt;h1&gt;金铲铲三板甲剑魔思路总结&lt;/h1&gt;
@@ -34,7 +354,7 @@
 &lt;/ol&gt;
 &lt;h3&gt;小提示&lt;/h3&gt;
 &lt;ol&gt;
-&lt;li&gt;如果无法凑到三板甲和同行较多拿不到三星剑魔，考虑转阵容 新星海魔（不依赖剑魔),todo 目前还在想&lt;/li&gt;
+&lt;li&gt;如果无法凑到三板甲和同行较多拿不到三星剑魔，考虑转阵容 新星海魔（不依赖剑魔),新星未来战士转84龙王&lt;/li&gt;
 &lt;li&gt;如果血量不健康且实在没办法升8拿千珏，在7直接大搜想办法能苟一点分就一点分（如果拿不到就只能老八了，所以我一般有就捏着）&lt;/li&gt;
 &lt;/ol&gt;
 </content:encoded></item></channel></rss>
