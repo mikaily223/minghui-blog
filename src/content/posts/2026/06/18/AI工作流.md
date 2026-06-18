@@ -1,5 +1,5 @@
 ---
-title: Transformer 入门教材 · 第 0 章　数学与神经网络基础
+title: AI工作流（Hermes / SpecKit / Superpowers / Paperclip）
 published: 2026-06-18
 updated: 2026-06-18
 draft: false
