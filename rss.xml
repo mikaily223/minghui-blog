@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><rss version="2.0" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>minghui`s blog</title><description>今朝依旧，今后亦然</description><link>https://mikaily223.github.io/</link><language>zh_CN</language><item><title>Transformer 入门教材 · 第 0 章　数学与神经网络基础</title><link>https://mikaily223.github.io/posts/2026/06/18/ai%E5%B7%A5%E4%BD%9C%E6%B5%81/</link><guid isPermaLink="true">https://mikaily223.github.io/posts/2026/06/18/ai%E5%B7%A5%E4%BD%9C%E6%B5%81/</guid><description>Claude Code,Hermes,SpecKit,Superpowers,Paperclip</description><pubDate>Thu, 18 Jun 2026 00:00:00 GMT</pubDate><content:encoded>&lt;h1&gt;AI 工具说明（Hermes / SpecKit / Superpowers / Paperclip）&lt;/h1&gt;
+<?xml version="1.0" encoding="UTF-8"?><rss version="2.0" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>minghui`s blog</title><description>今朝依旧，今后亦然</description><link>https://mikaily223.github.io/</link><language>zh_CN</language><item><title>AI工作流（Hermes / SpecKit / Superpowers / Paperclip）</title><link>https://mikaily223.github.io/posts/2026/06/18/ai%E5%B7%A5%E4%BD%9C%E6%B5%81/</link><guid isPermaLink="true">https://mikaily223.github.io/posts/2026/06/18/ai%E5%B7%A5%E4%BD%9C%E6%B5%81/</guid><description>Claude Code,Hermes,SpecKit,Superpowers,Paperclip</description><pubDate>Thu, 18 Jun 2026 00:00:00 GMT</pubDate><content:encoded>&lt;h1&gt;AI 工具说明（Hermes / SpecKit / Superpowers / Paperclip）&lt;/h1&gt;
 &lt;blockquote&gt;
 &lt;p&gt;安装日期：2026-06-18
 机器：Windows 10，Node v22.20.0，Python 3.13.9
@@ -574,8 +574,6 @@ A·x 第二个分量 = 第二行 · x = 3×5 + 4×6 = 39
 &lt;li&gt;用自己的话说明:神经元里的 &lt;code&gt;w·x&lt;/code&gt; 和 &lt;code&gt;b&lt;/code&gt; 各自的作用是什么?&lt;/li&gt;
 &lt;li&gt;如果把网络里所有激活函数都删掉,叠很多层会发生什么?为什么?&lt;/li&gt;
 &lt;/ol&gt;
-</content:encoded></item><item><title>Hello world!</title><link>https://mikaily223.github.io/posts/2026/06/11/hello-world/</link><guid isPermaLink="true">https://mikaily223.github.io/posts/2026/06/11/hello-world/</guid><description>你好，世界！</description><pubDate>Thu, 11 Jun 2026 00:00:00 GMT</pubDate><content:encoded>&lt;h1&gt;Hello World&lt;/h1&gt;
-&lt;p&gt;xixixi&lt;/p&gt;
 </content:encoded></item><item><title>上班摸鱼大法</title><link>https://mikaily223.github.io/posts/2026/06/11/%E4%B8%8A%E7%8F%AD%E6%91%B8%E9%B1%BC%E5%A4%A7%E6%B3%95/</link><guid isPermaLink="true">https://mikaily223.github.io/posts/2026/06/11/%E4%B8%8A%E7%8F%AD%E6%91%B8%E9%B1%BC%E5%A4%A7%E6%B3%95/</guid><description>随便写写，随便做做</description><pubDate>Thu, 11 Jun 2026 00:00:00 GMT</pubDate><content:encoded>&lt;h1&gt;「」&lt;/h1&gt;
 </content:encoded></item><item><title>金铲铲三板甲剑魔思路总结</title><link>https://mikaily223.github.io/posts/2026/06/11/%E9%87%91%E9%93%B2%E9%93%B2%E4%B8%89%E6%9D%BF%E7%94%B2%E5%89%91%E9%AD%94/</link><guid isPermaLink="true">https://mikaily223.github.io/posts/2026/06/11/%E9%87%91%E9%93%B2%E9%93%B2%E4%B8%89%E6%9D%BF%E7%94%B2%E5%89%91%E9%AD%94/</guid><description>苟分思路，前四还是老八我说了算！</description><pubDate>Thu, 11 Jun 2026 00:00:00 GMT</pubDate><content:encoded>&lt;h1&gt;金铲铲三板甲剑魔思路总结&lt;/h1&gt;
 &lt;h2&gt;核心构成&lt;/h2&gt;
@@ -613,4 +611,6 @@ A·x 第二个分量 = 第二行 · x = 3×5 + 4×6 = 39
 &lt;li&gt;如果无法凑到三板甲和同行较多拿不到三星剑魔，考虑转阵容 新星海魔（不依赖剑魔),新星未来战士转84龙王&lt;/li&gt;
 &lt;li&gt;如果血量不健康且实在没办法升8拿千珏，在7直接大搜想办法能苟一点分就一点分（如果拿不到就只能老八了，所以我一般有就捏着）&lt;/li&gt;
 &lt;/ol&gt;
+</content:encoded></item><item><title>Hello world!</title><link>https://mikaily223.github.io/posts/2026/06/11/hello-world/</link><guid isPermaLink="true">https://mikaily223.github.io/posts/2026/06/11/hello-world/</guid><description>你好，世界！</description><pubDate>Thu, 11 Jun 2026 00:00:00 GMT</pubDate><content:encoded>&lt;h1&gt;Hello World&lt;/h1&gt;
+&lt;p&gt;xixixi&lt;/p&gt;
 </content:encoded></item></channel></rss>

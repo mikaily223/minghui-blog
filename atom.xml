@@ -5,10 +5,10 @@
   <link href="https://mikaily223.github.io/" rel="alternate" type="text/html"/>
   <link href="https://mikaily223.github.io/atom.xml" rel="self" type="application/atom+xml"/>
   <id>https://mikaily223.github.io/</id>
-  <updated>2026-06-18T02:44:54.042Z</updated>
+  <updated>2026-06-18T03:00:44.494Z</updated>
   <language>zh_CN</language>
   <entry>
-    <title>Transformer 入门教材 · 第 0 章　数学与神经网络基础</title>
+    <title>AI工作流（Hermes / SpecKit / Superpowers / Paperclip）</title>
     <link href="https://mikaily223.github.io/posts/2026/06/18/ai%E5%B7%A5%E4%BD%9C%E6%B5%81/" rel="alternate" type="text/html"/>
     <id>https://mikaily223.github.io/posts/2026/06/18/ai%E5%B7%A5%E4%BD%9C%E6%B5%81/</id>
     <published>2026-06-18T00:00:00.000Z</published>
@@ -662,21 +662,6 @@ A·x 第二个分量 = 第二行 · x = 3×5 + 4×6 = 39
     <category term="Transformer"></category>
   </entry>
   <entry>
-    <title>Hello world!</title>
-    <link href="https://mikaily223.github.io/posts/2026/06/11/hello-world/" rel="alternate" type="text/html"/>
-    <id>https://mikaily223.github.io/posts/2026/06/11/hello-world/</id>
-    <published>2026-06-11T00:00:00.000Z</published>
-    <updated>2026-06-11T00:00:00.000Z</updated>
-    <summary>你好，世界！</summary>
-    <content type="html"><![CDATA[<h1>Hello World</h1>
-<p>xixixi</p>
-]]></content>
-    <author>
-      <name>Ming hui</name>
-    </author>
-    <category term="测试分类"></category>
-  </entry>
-  <entry>
     <title>上班摸鱼大法</title>
     <link href="https://mikaily223.github.io/posts/2026/06/11/%E4%B8%8A%E7%8F%AD%E6%91%B8%E9%B1%BC%E5%A4%A7%E6%B3%95/" rel="alternate" type="text/html"/>
     <id>https://mikaily223.github.io/posts/2026/06/11/%E4%B8%8A%E7%8F%AD%E6%91%B8%E9%B1%BC%E5%A4%A7%E6%B3%95/</id>
@@ -738,5 +723,20 @@ A·x 第二个分量 = 第二行 · x = 3×5 + 4×6 = 39
       <name>Ming hui</name>
     </author>
     <category term="金铲铲"></category>
+  </entry>
+  <entry>
+    <title>Hello world!</title>
+    <link href="https://mikaily223.github.io/posts/2026/06/11/hello-world/" rel="alternate" type="text/html"/>
+    <id>https://mikaily223.github.io/posts/2026/06/11/hello-world/</id>
+    <published>2026-06-11T00:00:00.000Z</published>
+    <updated>2026-06-11T00:00:00.000Z</updated>
+    <summary>你好，世界！</summary>
+    <content type="html"><![CDATA[<h1>Hello World</h1>
+<p>xixixi</p>
+]]></content>
+    <author>
+      <name>Ming hui</name>
+    </author>
+    <category term="测试分类"></category>
   </entry>
 </feed>
