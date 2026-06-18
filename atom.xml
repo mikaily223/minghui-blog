@@ -5,8 +5,277 @@
   <link href="https://mikaily223.github.io/" rel="alternate" type="text/html"/>
   <link href="https://mikaily223.github.io/atom.xml" rel="self" type="application/atom+xml"/>
   <id>https://mikaily223.github.io/</id>
-  <updated>2026-06-16T05:36:51.682Z</updated>
+  <updated>2026-06-18T02:44:54.042Z</updated>
   <language>zh_CN</language>
+  <entry>
+    <title>Transformer 入门教材 · 第 0 章　数学与神经网络基础</title>
+    <link href="https://mikaily223.github.io/posts/2026/06/18/ai%E5%B7%A5%E4%BD%9C%E6%B5%81/" rel="alternate" type="text/html"/>
+    <id>https://mikaily223.github.io/posts/2026/06/18/ai%E5%B7%A5%E4%BD%9C%E6%B5%81/</id>
+    <published>2026-06-18T00:00:00.000Z</published>
+    <updated>2026-06-18T00:00:00.000Z</updated>
+    <summary>Claude Code,Hermes,SpecKit,Superpowers,Paperclip</summary>
+    <content type="html"><![CDATA[<h1>AI 工具说明（Hermes / SpecKit / Superpowers / Paperclip）</h1>
+<blockquote>
+<p>安装日期：2026-06-18
+机器：Windows 10，Node v22.20.0，Python 3.13.9
+本文档说明这 4 个工具分别是什么、能干什么、以及你该怎么用。</p>
+</blockquote>
+<hr />
+<h2>0. 一句话总览</h2>
+<table>
+<thead>
+<tr>
+<th>工具</th>
+<th>它是什么</th>
+<th>解决什么问题</th>
+<th>安装方式</th>
+<th>当前状态</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>SpecKit</strong></td>
+<td>Claude Code 里的"规格驱动开发"命令集（Python CLI 安装）</td>
+<td>让 AI 先写清楚需求/计划/任务，再动手写代码，避免一上来就乱写</td>
+<td><code>uv</code> 安装的 <code>specify</code> CLI</td>
+<td>✅ 已装好</td>
+</tr>
+<tr>
+<td><strong>Superpowers</strong></td>
+<td>Claude Code 插件（一套开发方法论 + 技能库）</td>
+<td>给 Claude 装上"自动按最佳实践干活"的大脑：头脑风暴→计划→测试驱动→代码审查</td>
+<td><code>/plugin</code> 市场插件</td>
+<td>✅ 已装好并启用（v6.0.2，需重启 Claude Code 生效）</td>
+</tr>
+<tr>
+<td><strong>Hermes</strong></td>
+<td>Claude Code 插件（常驻后台助手 daemon）</td>
+<td>让 Claude 7×24 在后台跑：定时任务、Telegram/Discord 收发消息、语音转写</td>
+<td><code>/plugin</code> 市场插件</td>
+<td>✅ 已装好并启用（v1.0.2，需重启后跑 <code>/claude-hermes:start</code>）</td>
+</tr>
+<tr>
+<td><strong>Paperclip</strong></td>
+<td>独立 Web 应用（多 Agent 编排平台）</td>
+<td>把多个 AI agent 组成一个"公司/团队"协作完成业务目标</td>
+<td>全局 npm 应用</td>
+<td>✅ 已装好并运行中</td>
+</tr>
+</tbody>
+</table>
+<p><strong>关键区别</strong>：SpecKit 和 Paperclip 跟 Claude Code 的插件系统<strong>没关系</strong>（一个是 CLI，一个是独立网站）；Superpowers 和 Hermes 才是真正的 Claude Code 插件，需要你用 <code>/plugin</code> 命令装。</p>
+<hr />
+<h2>1. SpecKit —— 规格驱动开发（Spec-Driven Development）</h2>
+<h3>它是什么</h3>
+<p>GitHub 官方出的工具，核心理念是：<strong>先把"要做什么"写成规格文档，再让 AI 写代码</strong>。它给 Claude Code 增加了一组 <code>/speckit.*</code> 斜杠命令，把开发拆成"宪法→规格→计划→任务→实现"几个阶段。</p>
+<h3>能干什么</h3>
+<p>让你和 AI 之间有一份明确的"合同"：需求、技术方案、任务清单都先白纸黑字写下来，AI 严格照着做，减少跑偏和返工。</p>
+<h3>怎么用</h3>
+<p><strong>第一步：在你的项目里初始化</strong>（已装好 <code>specify</code> 命令，直接用）：</p>
+<pre><code># 在某个新项目目录里
+specify init my-project --integration claude
+
+# 或在当前已有目录里初始化
+specify init . --integration claude
+</code></pre>
+<p>初始化后，你的项目里会多出 Spec Kit 的模板和命令配置。</p>
+<p><strong>第二步：在 Claude Code 里按顺序使用这些命令</strong>：</p>
+<table>
+<thead>
+<tr>
+<th>命令</th>
+<th>作用</th>
+<th>什么时候用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>/speckit.constitution</code></td>
+<td>制定项目的"宪法"（开发原则、规范）</td>
+<td>项目最开始，定规矩</td>
+</tr>
+<tr>
+<td><code>/speckit.specify</code></td>
+<td>描述<strong>要做什么</strong>（需求、用户故事，不谈技术）</td>
+<td>想清楚功能</td>
+</tr>
+<tr>
+<td><code>/speckit.clarify</code></td>
+<td>澄清需求里没说清的地方</td>
+<td>specify 之后，plan 之前</td>
+</tr>
+<tr>
+<td><code>/speckit.plan</code></td>
+<td>制定技术实现方案（选技术栈、架构）</td>
+<td>需求定了之后</td>
+</tr>
+<tr>
+<td><code>/speckit.tasks</code></td>
+<td>把方案拆成一条条可执行的任务</td>
+<td>方案定了之后</td>
+</tr>
+<tr>
+<td><code>/speckit.implement</code></td>
+<td>按计划执行所有任务，真正写代码</td>
+<td>最后一步</td>
+</tr>
+</tbody>
+</table>
+<p><strong>典型流程</strong>：<code>constitution → specify → clarify → plan → tasks → implement</code></p>
+<p><strong>适合场景</strong>：你要做一个<strong>结构化、需求明确</strong>的功能/项目，想让 AI 有条不紊地推进，而不是想到哪写到哪。</p>
+<hr />
+<h2>2. Superpowers —— 给 Claude 的"开发超能力"</h2>
+<h3>它是什么</h3>
+<p>一套<strong>开发方法论 + 可组合技能库</strong>的 Claude Code 插件。和 SpecKit 不同，它<strong>大部分不靠你手动敲命令</strong>——Claude 在做任务前会自动检查"有没有相关技能"并自动套用最佳实践。</p>
+<h3>能干什么</h3>
+<p>给 Claude 装上一套久经考验的工作流，核心是 7 个阶段：</p>
+<ol>
+<li><strong>头脑风暴（Brainstorming）</strong> —— 写代码前先用提问把需求问清楚</li>
+<li><strong>Git Worktree 隔离</strong> —— 在独立分支上干活，保证基线干净</li>
+<li><strong>写计划（Writing Plans）</strong> —— 把活拆成 2–5 分钟一个的小任务</li>
+<li><strong>子 Agent 驱动开发</strong> —— 每个任务派一个全新 agent，两阶段代码审查</li>
+<li><strong>测试驱动开发（TDD）</strong> —— 强制 红→绿→重构 循环</li>
+<li><strong>请求代码审查</strong> —— 对照计划审查，发现严重问题就拦下</li>
+<li><strong>收尾分支</strong> —— 处理合并/PR 和清理</li>
+</ol>
+<h3>怎么用</h3>
+<p><strong>已通过 <code>claude plugin</code> CLI 装好并启用（v6.0.2）</strong>，等价命令为：</p>
+<pre><code># 已替你执行（用的是非交互 CLI）：
+claude plugin marketplace add obra/superpowers-marketplace
+claude plugin install superpowers@superpowers-marketplace
+# 在 Claude Code 输入框里的等价交互命令为：
+# /plugin marketplace add obra/superpowers-marketplace
+# /plugin install superpowers@superpowers-marketplace
+</code></pre>
+<blockquote>
+<p>⚠️ <strong>需重启 Claude Code</strong> 后插件才会加载生效。</p>
+</blockquote>
+<p><strong>安装后</strong>：大部分能力会自动触发。也有几个可以主动调用的命令，例如：</p>
+<ul>
+<li><code>/brainstorm</code> —— 主动开始需求头脑风暴</li>
+<li><code>/write-plan</code> —— 让它给当前任务写一份详细计划</li>
+<li><code>/execute-plan</code> —— 执行已经写好的计划</li>
+</ul>
+<p><strong>适合场景</strong>：你希望 Claude <strong>写代码时自动遵守"先想清楚、测试先行、写完审查"的规范</strong>，提升代码质量、减少 bug。日常写代码都建议开着。</p>
+<hr />
+<h2>3. Hermes —— 7×24 常驻后台 AI 助手</h2>
+<h3>它是什么</h3>
+<p>一个**后台守护进程（daemon）**插件，把 Claude Code 变成"永不下线"的私人助手。它独立于你当前的对话窗口持续运行。</p>
+<h3>能干什么</h3>
+<ul>
+<li><strong>自动化</strong>：定时心跳检查、带时区的 cron 定时任务（支持热重载）、任务调度</li>
+<li><strong>通讯</strong>：接入 <strong>Telegram</strong>（文字/图片/语音）和 <strong>Discord</strong>（私信、@提及、斜杠命令、语音）</li>
+<li><strong>多会话线程</strong>：每个 Discord 线程一个独立 Claude 会话，可并行</li>
+<li><strong>自我进化</strong>：人工触发的代码自我改进，通过验证后自动提交</li>
+<li><strong>技能学习</strong>：候选技能跑满 ≥20 次且成功率 ≥85% 后自动"转正"，表现掉到 70% 以下则降级</li>
+<li><strong>模型路由</strong>：自动判断"规划类"任务用 Opus、"实现类"任务用 Sonnet</li>
+<li><strong>安全分级</strong>：从只读到完全开放共四档权限</li>
+</ul>
+<h3>怎么用</h3>
+<p><strong>已通过 <code>claude plugin</code> CLI 装好并启用（v1.0.2）</strong>，等价命令为：</p>
+<pre><code># 已替你执行：
+claude plugin marketplace add sypsyp97/claude-hermes
+claude plugin install claude-hermes@claude-hermes
+# 交互等价命令：
+# /plugin marketplace add sypsyp97/claude-hermes
+# /plugin install claude-hermes@claude-hermes
+</code></pre>
+<blockquote>
+<p>⚠️ <strong>需重启 Claude Code</strong> 后再执行下面的初始化。</p>
+</blockquote>
+<p><strong>初始化</strong>：</p>
+<pre><code>/claude-hermes:start
+</code></pre>
+<p>会启动一个设置向导，引导你配置守护进程、Telegram/Discord 接入等。</p>
+<p><strong>其他命令</strong>：</p>
+<ul>
+<li><code>/claude-hermes:new</code> —— 新建定时任务（job）、技能（skill）或提示词</li>
+<li><code>/stop</code>、<code>/stop-all</code>、<code>/reset</code> —— 在 Discord/Telegram 里控制守护进程</li>
+</ul>
+<p><strong>适合场景</strong>：你想让 AI <strong>在你不在电脑前时也能干活</strong>——比如定时跑报告、手机上用 Telegram 给它发指令、语音转文字下命令。⚠️ 注意它是常驻后台服务，比普通插件"重"，会一直运行。</p>
+<hr />
+<h2>4. Paperclip —— 多 Agent 编排平台（独立 Web 应用）</h2>
+<h3>它是什么</h3>
+<p>一个<strong>自托管的开源 Web 应用</strong>，把多个 AI agent 组织成一个"团队/公司"来协同完成业务目标。它<strong>和 Claude Code 插件系统无关</strong>，是一个独立跑在本机的网站。</p>
+<h3>能干什么</h3>
+<ul>
+<li>用一个网页界面（像管理一家公司）来创建、管理多个 agent</li>
+<li>给 agent 分配任务、设定预算、协调它们之间的协作和任务路由</li>
+<li>自带嵌入式 PostgreSQL 数据库、本地文件存储、加密密钥管理，开箱即用</li>
+<li>数据全在本机（<code>C:\Users\zmh\.paperclip</code>），无需注册 Paperclip 账号</li>
+</ul>
+<h3>怎么用</h3>
+<p><strong>已经装好并正在运行</strong>，直接打开浏览器访问：</p>
+<p>👉 <strong>http://127.0.0.1:3100</strong></p>
+<p><strong>常用命令行操作</strong>：</p>
+<pre><code>paperclipai run          # 启动服务器（前台运行，关掉终端即停）
+paperclipai configure    # 修改配置（比如接入大模型）
+paperclipai doctor       # 体检：检查配置是否正常
+</code></pre>
+<p><strong>⚠️ 重要：还需要配置一个大模型</strong>
+目前体检显示 <code>LLM: not configured</code>（没配大模型），agent 还不能真正干活。打开 UI 或运行 <code>paperclipai configure</code>，填入一个大模型的 API Key（推荐 Anthropic Claude，模型如 <code>claude-opus-4-8</code> / <code>claude-sonnet-4-6</code>）后才能让 agent 工作。</p>
+<p><strong>适合场景</strong>：你想搭一个"多 AI 协作"的实验场，让若干 agent 分工合作完成较复杂的业务流程，而不是单个对话窗口。</p>
+<h3>安装时遇到的坑（已解决，仅供参考）</h3>
+<p>Paperclip 捆绑的 <code>embedded-postgres@18.1.0-beta.16</code> 是个<strong>上游打包 bug</strong>：它依赖的 Windows 版数据库二进制 <code>@embedded-postgres/windows-x64@18.1.0-beta.16</code> 从未发布（最高只到 <code>beta.15</code>），还引用了一个 npm 上根本不存在的 <code>@embedded-postgres/symlink-reader</code>。所以默认安装时 <code>npx</code> 会静默跳过数据库二进制，导致服务器启动崩溃。
+<strong>解决办法</strong>：全局安装 <code>paperclipai</code> 后，把内置的 <code>embedded-postgres</code> 降到能正常工作的 <code>18.1.0-beta.15</code>，npm 就能正确拉到 Windows 数据库二进制，服务器随后正常启动。
+（另有一个无害告警：密钥文件 <code>master.key</code> 权限为 666，单用户 Windows 机器上可忽略。）</p>
+<hr />
+<h2>5. 快速上手建议（按使用频率）</h2>
+<ol>
+<li><strong>日常写代码</strong> → 装上 <strong>Superpowers</strong>，让 Claude 自动按最佳实践干活（最推荐，先装）。</li>
+<li><strong>做有明确需求的新功能/项目</strong> → 用 <strong>SpecKit</strong>：<code>specify init . --integration claude</code>，再走 <code>constitution → specify → plan → tasks → implement</code>。</li>
+<li><strong>想要后台/手机随时使唤 AI</strong> → 装 <strong>Hermes</strong>，跑 <code>/claude-hermes:start</code> 配好 Telegram/Discord。</li>
+<li><strong>想玩多 agent 协作</strong> → 打开 <strong>Paperclip</strong>（http://127.0.0.1:3100），先在里面配好大模型 API Key。</li>
+</ol>
+<hr />
+<h2>6. 你现在还需要做的事</h2>
+<ul>
+<li>[x] <s>安装 Superpowers 和 Hermes 插件</s> → 已用 <code>claude plugin</code> CLI 装好并启用</li>
+<li>[ ] <strong>重启 Claude Code</strong>，让两个插件加载生效</li>
+<li>[ ] 重启后跑 <code>/claude-hermes:start</code> 完成 Hermes 的初始化向导（配 Telegram/Discord 等）</li>
+<li>[ ] 给 <strong>Paperclip</strong> 配置大模型 API Key（<code>paperclipai configure</code> 或在 UI 里设置）</li>
+</ul>
+<hr />
+<h2>附：安装信息备查</h2>
+<table>
+<thead>
+<tr>
+<th>工具</th>
+<th>安装位置 / 命令</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SpecKit</td>
+<td><code>uv tool install</code> 的 <code>specify</code>（v0.11.2）；<code>uv</code> 装在当前 Python venv</td>
+</tr>
+<tr>
+<td>Paperclip</td>
+<td>全局 npm：<code>C:\Program Files\nodejs\node_modules\paperclipai</code>；数据：<code>C:\Users\zmh\.paperclip</code></td>
+</tr>
+<tr>
+<td>Superpowers</td>
+<td>市场 <code>obra/superpowers-marketplace</code>，插件 v6.0.2，user 作用域，已启用</td>
+</tr>
+<tr>
+<td>Hermes</td>
+<td>市场 <code>sypsyp97/claude-hermes</code>，插件 v1.0.2，user 作用域，已启用</td>
+</tr>
+</tbody>
+</table>
+<p><strong>参考链接</strong></p>
+<ul>
+<li>Superpowers: https://github.com/obra/superpowers</li>
+<li>Hermes: https://github.com/sypsyp97/claude-hermes</li>
+<li>SpecKit: https://github.com/github/spec-kit</li>
+<li>Paperclip: https://github.com/paperclipai/paperclip</li>
+</ul>
+]]></content>
+    <author>
+      <name>Ming hui</name>
+    </author>
+    <category term="AI"></category>
+  </entry>
   <entry>
     <title>Transformer 入门教材 · 第 4 章　编码器-解码器、掩码与文本生成</title>
     <link href="https://mikaily223.github.io/posts/2026/06/16/transformer%E6%95%99%E6%9D%90_%E7%AC%AC4%E7%AB%A0_%E7%BC%96%E7%A0%81%E5%99%A8%E8%A7%A3%E7%A0%81%E5%99%A8%E4%B8%8E%E6%96%87%E6%9C%AC%E7%94%9F%E6%88%90/" rel="alternate" type="text/html"/>
